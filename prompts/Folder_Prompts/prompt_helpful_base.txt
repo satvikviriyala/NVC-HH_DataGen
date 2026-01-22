@@ -1,41 +1,39 @@
 TASK: Annotate HH-RLHF helpful-base preference pairs into OFNR schema.
 
-You are given one JSONL row from:
-hh-rlhf/helpful-base/train.jsonl (or test.jsonl)
+Target Output File: Gemini3_pro_helpful_base_train.jsonl
 
-Input format:
+Context:
+You are processing the input file `hh-rlhf/helpful-base/train.jsonl`.
+For EACH line in the input file, you must generate one corresponding JSONL object and append it to `Gemini3_pro_helpful_base_train.jsonl`.
+
+Input format (one line):
 {
   "chosen": "Human: ...\nAssistant: ...",
   "rejected": "Human: ...\nAssistant: ..."
 }
 
 GOAL:
-Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+Produce strictly valid JSONL (one JSON object per line).
+Do NOT wrap the output in a list or markdown block.
+Each output line must conform to `ontologies/schema_ofnr.json`.
+Append this line to: `Gemini3_pro_helpful_base_train.jsonl`
 
 What to focus on:
 - Helpfulness quality: clarity, completeness, non-evasive support
 - Extract the user's underlying needs even if the user requests strategies
 - Implicit request must be actionable and constructive
-- Keep sentiment preserved (especially if user is upset)
+- Keep sentiment preserved
 
 How to fill schema:
 - dataset.teacher_model = "gemini_3_pro"
 - source.folder = "helpful-base"
 - source.pair_type = "chosen_rejected"
 - input.format = "pair"
-- input.chosen/rejected = provided
-
-Pairwise:
-- pairwise_preference.available = true
-- Leave preference_alignment fields null unless obvious
 
 Safety:
 - Usually allowed, but still detect disallowed content
 
-Output:
-Return ONLY ONE valid JSON object. No markdown.
+Output format example:
+{"id": "...", "ofnr": {...}}
 
-Hard constraints:
-- OFNR schema must match exactly
-- Need list must match needs ontology (no strategies)
-- Requests must score high actionability unless refusal
+REMEMBER: Output must be JSONL. No extra text.

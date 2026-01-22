@@ -1,21 +1,26 @@
 TASK: Annotate HH-RLHF helpful-rejection-sampled preference pairs into OFNR schema.
 
-You are given one JSONL row from:
-hh-rlhf/helpful-rejection-sampled/train.jsonl
+Target Output File: Gemini3_pro_helpful_rejection_sampled_train.jsonl
 
-Input format:
+Context:
+You are processing the input file `hh-rlhf/helpful-rejection-sampled/train.jsonl`.
+For EACH line in the input file, you must generate one corresponding JSONL object and append it to `Gemini3_pro_helpful_rejection_sampled_train.jsonl`.
+
+Input format (one line):
 {
   "chosen": "Human: ...\nAssistant: ...",
   "rejected": "Human: ...\nAssistant: ..."
 }
 
 GOAL:
-Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+Produce strictly valid JSONL (one JSON object per line).
+Do NOT wrap the output in a list or markdown block.
+Each output line must conform to `ontologies/schema_ofnr.json`.
+Append this line to: `Gemini3_pro_helpful_rejection_sampled_train.jsonl`
 
 What to focus on:
-- This folder originates from rejection sampling (best-of-K), differences may be subtle.
-- Extract OFNR primarily from the user's message, not from assistant quality.
-- Do not overfit to surface politeness; identify real needs and requests.
+- Differences in pairs may be subtle.
+- Extract OFNR primarily from the user's message.
 - Provide actionable implicit_request.
 
 How to fill schema:
@@ -23,10 +28,8 @@ How to fill schema:
 - source.folder = "helpful-rejection-sampled"
 - source.pair_type = "chosen_rejected"
 - input.format = "pair"
-- input.chosen/rejected = provided
 
-Pairwise:
-- pairwise_preference.available = true
+Output format example:
+{"id": "...", "ofnr": {...}}
 
-Output:
-Return ONLY ONE valid JSON object. No markdown.
+REMEMBER: Output must be JSONL. No extra text.

@@ -1,25 +1,28 @@
 TASK: Annotate HH-RLHF red-team-attempts transcripts into OFNR schema.
 
-You are given one JSONL row from:
-hh-rlhf/red-team-attempts/*.jsonl
+Target Output File: Gemini3_pro_red_team_attempts_train.jsonl
 
-Input format (typical):
+Context:
+You are processing the input file `hh-rlhf/red-team-attempts/*.jsonl`.
+For EACH line in the input file, you must generate one corresponding JSONL object and append it to `Gemini3_pro_red_team_attempts_train.jsonl`.
+
+Input format (one line):
 {
   "transcript": "Human: ...\nAssistant: ...\nHuman: ...",
   "rating": <number>,
   "task_description": "...",
-  "min_harmlessness_score_transcript": ...,
-  ...
+  "min_harmlessness_score_transcript": ...
 }
 
 GOAL:
-Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+Produce strictly valid JSONL (one JSON object per line).
+Do NOT wrap the output in a list or markdown block.
+Each output line must conform to `ontologies/schema_ofnr.json`.
+Append this line to: `Gemini3_pro_red_team_attempts_train.jsonl`
 
 What to focus on:
 - Extract the LAST user intention / last user prompt.
-- Red-team content may be harmful: wrongdoing, hate, violence, self-harm.
 - Apply safety policy strictly.
-- Still extract OFN (observation, feelings, needs) if possible.
 - Request must become safe_redirect or refusal if disallowed.
 
 How to fill schema:
@@ -28,18 +31,14 @@ How to fill schema:
 - source.pair_type = "single"
 - input.format = "single"
 - input.prompt = transcript (or last user turn)
-- source.metadata.rating = provided rating
-- source.metadata.task_description = provided task_description
-
-Pairwise:
-- pairwise_preference.available = false
 
 Safety:
 - For disallowed requests:
   safety.label="disallowed"
   rewrite_mode="refusal" OR "safe_redirect"
   ofnr.implicit_request must redirect safely toward underlying need
-  safe_alternative[] must be populated (>=1)
 
-Output:
-Return ONLY ONE valid JSON object. No markdown.
+Output format example:
+{"id": "...", "ofnr": {...}}
+
+REMEMBER: Output must be JSONL. No extra text.

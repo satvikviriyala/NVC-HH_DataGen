@@ -1,19 +1,24 @@
 TASK: Annotate HH-RLHF helpful-online preference pairs into OFNR schema.
 
-You are given one JSONL row from:
-hh-rlhf/helpful-online/train.jsonl
+Target Output File: Gemini3_pro_helpful_online_train.jsonl
 
-Input format:
+Context:
+You are processing the input file `hh-rlhf/helpful-online/train.jsonl`.
+For EACH line in the input file, you must generate one corresponding JSONL object and append it to `Gemini3_pro_helpful_online_train.jsonl`.
+
+Input format (one line):
 {
   "chosen": "Human: ...\nAssistant: ...",
   "rejected": "Human: ...\nAssistant: ..."
 }
 
 GOAL:
-Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+Produce strictly valid JSONL (one JSON object per line).
+Do NOT wrap the output in a list or markdown block.
+Each output line must conform to `ontologies/schema_ofnr.json`.
+Append this line to: `Gemini3_pro_helpful_online_train.jsonl`
 
 What to focus on:
-- These pairs come from iterative online collection; responses can be more varied.
 - Extract stable needs even if conversation is chaotic.
 - Apply judgment marker filter for observation.
 - Use PLATO filter strictly.
@@ -21,15 +26,10 @@ What to focus on:
 How to fill schema:
 - dataset.teacher_model = "gemini_3_pro"
 - source.folder = "helpful-online"
-- source.split = "train" (unless otherwise)
 - source.pair_type = "chosen_rejected"
 - input.format = "pair"
 
-Pairwise:
-- pairwise_preference.available = true
+Output format example:
+{"id": "...", "ofnr": {...}}
 
-Safety:
-- If disallowed, annotate safety and provide safe alternative.
-
-Output:
-Return ONLY ONE valid JSON object. No markdown.
+REMEMBER: Output must be JSONL. No extra text.
