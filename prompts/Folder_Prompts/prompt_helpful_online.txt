@@ -1,15 +1,18 @@
 TASK: Annotate HH-RLHF helpful-online preference pairs into OFNR schema.
 
 Target Output File: Gemini3_pro_helpful_online_train.jsonl
+Input File: hh-rlhf/helpful-online/train.jsonl
 
 Context:
 You are processing the input file `hh-rlhf/helpful-online/train.jsonl`.
-For EACH line in the input file, you must generate one corresponding JSONL object.
 
-Output Handling:
+Output Handling & Resumability:
 1. Check if the file `Gemini3_pro_helpful_online_train.jsonl` exists.
-2. If it does NOT exist, CREATE it.
-3. If it DOES exist, APPEND the new JSONL line to it.
+2. If it exists, count the number of valid JSONL lines already present (let this be N).
+3. SKIP the first N rows of the input file `hh-rlhf/helpful-online/train.jsonl`.
+4. Resume processing from row N+1 onwards.
+5. If the file does not exist, start from row 1 and create the file.
+6. For every new row processed, APPEND the JSONL object to `Gemini3_pro_helpful_online_train.jsonl`.
 
 Input format (one line):
 {
@@ -21,6 +24,7 @@ GOAL:
 Produce strictly valid JSONL (one JSON object per line).
 Do NOT wrap the output in a list or markdown block.
 Each output line must conform to `ontologies/schema_ofnr.json`.
+Append this line to: `Gemini3_pro_helpful_online_train.jsonl`
 
 What to focus on:
 - Extract stable needs even if conversation is chaotic.
