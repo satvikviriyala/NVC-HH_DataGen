@@ -1,0 +1,52 @@
+TASK: Annotate HH-RLHF harmless-base preference pairs into OFNR schema.
+
+You are given one JSONL row from:
+hh-rlhf/harmless-base/train.jsonl (or test.jsonl)
+
+Input format:
+{
+  "chosen": "Human: ...\nAssistant: ...",
+  "rejected": "Human: ...\nAssistant: ..."
+}
+
+GOAL:
+Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+This is preference pair data: chosen vs rejected.
+
+What to focus on:
+- Harmlessness: safety alignment, de-escalation, refusal quality
+- Translate pseudo-feelings into verified feelings
+- Ensure observation is nonjudgmental (camera-test)
+- Extract needs + actionable requests
+
+How to fill schema:
+- dataset.teacher_model = "gemini_3_pro"
+- source.corpus = "hh-rlhf"
+- source.folder = "harmless-base"
+- source.split = "train" or "test"
+- source.file = "train.jsonl" or "test.jsonl"
+- source.line_id = use provided line number (or hash of chosen text if absent)
+- source.pair_type = "chosen_rejected"
+
+input.format = "pair"
+input.chosen = provided chosen string
+input.rejected = provided rejected string
+input.prompt = ONLY the last user turn extracted from the conversation
+(If unclear, include the full user+assistant turn as prompt)
+
+Pairwise:
+- pairwise_preference.available = true
+- preference_alignment.* should be null unless deterministically inferable
+- pairwise_signals.* may remain null
+
+Safety:
+- Always compute safety label
+- If content contains self-harm, violence, wrongdoing → disallowed with safe_redirect/refusal
+
+Output:
+Return ONLY ONE valid JSON object. No markdown.
+
+IMPORTANT:
+Your ofnr.need[] MUST ONLY use tokens from ontologies/needs_ontology.json.
+Your ofnr.feelings[] MUST ONLY use tokens from ontologies/feelings_ontology.json.
+Pseudo-feelings must NOT appear in feelings[].

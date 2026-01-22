@@ -1,0 +1,395 @@
+{
+    "name": "schema_ofnr",
+    "version": "1.1.0",
+    "created_for": "NVC-HH dataset (OFNR extraction; hallucination mitigation; constructive request generation)",
+    "license": "research-use",
+    "description": "Master JSON schema for OFNR extraction dataset. Supports preference pairs (chosen/rejected), single transcripts, somatic markers, multi-teacher agreement, and consensus filtering. Designed for ACL-quality reporting and robust finetuning.",
+    "rules": {
+        "one_json_object_per_line": true,
+        "output_must_be_valid_json": true,
+        "no_extra_keys": true,
+        "strings_must_be_utf8": true,
+        "lists_must_be_non_empty_when_applicable": true,
+        "max_list_lengths": {
+            "observation": 4,
+            "feelings": 4,
+            "need": 3,
+            "explicit_needs": 6,
+            "implicit_needs": 6,
+            "explicit_request": 3,
+            "implicit_request": 4
+        }
+    },
+    "schema": {
+        "id": "string",
+        "created_at_utc": "string(ISO8601)",
+        "dataset": {
+            "dataset_name": "string (e.g., NVC-HH)",
+            "dataset_version": "string",
+            "release_tier": "RAW|GOLD",
+            "teacher_model": "string (e.g., gemini_3_pro, gpt_oss_120b)",
+            "annotation_run_id": "string",
+            "prompt_version": "string",
+            "ontology_versions": {
+                "needs_ontology": "string",
+                "feelings_ontology": "string",
+                "pseudo_feelings_lexicon": "string",
+                "somatic_markers_ontology": "string",
+                "judgment_markers_ontology": "string",
+                "plato_strategy_filter": "string",
+                "request_quality_ontology": "string"
+            }
+        },
+        "source": {
+            "corpus": "hh-rlhf|custom|production",
+            "folder": "harmless-base|helpful-base|helpful-online|helpful-rejection-sampled|red-team-attempts|custom",
+            "split": "train|test|valid|unknown",
+            "file": "string",
+            "line_id": "string",
+            "pair_type": "chosen_rejected|single",
+            "metadata": {
+                "rating": "number|null",
+                "task_description": "string|null",
+                "model_type": "string|null",
+                "num_params": "string|null",
+                "additional": "object|null"
+            }
+        },
+        "input": {
+            "format": "pair|single",
+            "prompt": "string (user last turn or transcript)",
+            "context": "string|null",
+            "chosen": "string|null",
+            "rejected": "string|null",
+            "assistant_response": "string|null",
+            "conversation_turns": [
+                {
+                    "role": "system|user|assistant",
+                    "content": "string"
+                }
+            ],
+            "target_turn_index": "integer|null",
+            "notes": "string|null"
+        },
+        "ofnr": {
+            "observation": [
+                "string"
+            ],
+            "feelings": [
+                "string"
+            ],
+            "need": [
+                "string"
+            ],
+            "explicit_needs": [
+                "string"
+            ],
+            "implicit_needs": [
+                "string"
+            ],
+            "explicit_request": [
+                "string"
+            ],
+            "implicit_request": [
+                "string"
+            ],
+            "implicit_intent": "string",
+            "evaluations_detected": [
+                "string"
+            ],
+            "pseudo_feelings_detected": [
+                "string"
+            ],
+            "strategy_leakage_detected": [
+                "string"
+            ],
+            "translation_notes": "string|null"
+        },
+        "metadata": {
+            "somatic_markers": [
+                {
+                    "marker": "string",
+                    "modality": "tactile_texture|temperature|energy_flow|visceral_internal|cardio_respiratory|musculoskeletal|kinetic_motion|neurological|fatigue_energy|spatial_expansion_constriction",
+                    "intensity": "low|medium|high",
+                    "evidence_span": "string",
+                    "confidence": "number (0.0-1.0)"
+                }
+            ],
+            "emotion_arousal_hint": "low|medium|high|null",
+            "emotion_valence_hint": "positive|negative|mixed|null",
+            "language": "string (ISO639-1 or best guess)"
+        },
+        "safety": {
+            "label": "allowed|disallowed|ambiguous",
+            "policy_category": "string|null",
+            "reason": "string",
+            "rewrite_mode": "normal|safe_redirect|refusal",
+            "safe_alternative": [
+                "string"
+            ],
+            "safety_confidence": "number (0.0-1.0)"
+        },
+        "quality": {
+            "ofnr_compliance": "number (0.0-1.0)",
+            "observation_is_nonjudgmental": "number (0.0-1.0)",
+            "pseudo_feeling_translation_quality": "number (0.0-1.0)",
+            "needs_list_match": "number (0.0-1.0)",
+            "strategy_leakage_score": "number (0.0-1.0)",
+            "request_is_actionable": "number (0.0-1.0)",
+            "request_is_noncoercive": "number (0.0-1.0)",
+            "overall_confidence": "number (0.0-1.0)"
+        },
+        "flags": {
+            "error_flags": [
+                "string"
+            ],
+            "warnings": [
+                "string"
+            ]
+        },
+        "teacher_agreement": {
+            "multi_teacher_enabled": "boolean",
+            "teachers": [
+                {
+                    "teacher_id": "string (A|B|C|D...)",
+                    "model": "string",
+                    "ofnr_hash": "string",
+                    "need": [
+                        "string"
+                    ],
+                    "feelings": [
+                        "string"
+                    ],
+                    "agreement_with_consensus": {
+                        "need_overlap": "number (0.0-1.0)",
+                        "feeling_overlap": "number (0.0-1.0)",
+                        "observation_similarity": "number (0.0-1.0)",
+                        "request_similarity": "number (0.0-1.0)",
+                        "overall": "number (0.0-1.0)"
+                    }
+                }
+            ],
+            "consensus": {
+                "enabled": "boolean",
+                "method": "majority_vote|weighted_vote|judge_model",
+                "consensus_score": "number (0.0-1.0)",
+                "consensus_pass": "boolean",
+                "resolved_need": [
+                    "string"
+                ],
+                "resolved_feelings": [
+                    "string"
+                ],
+                "resolved_observation": [
+                    "string"
+                ],
+                "resolved_implicit_request": [
+                    "string"
+                ]
+            }
+        },
+        "pairwise_preference": {
+            "available": "boolean",
+            "preference_alignment": {
+                "chosen_more_constructive": "boolean|null",
+                "chosen_more_safe": "boolean|null",
+                "chosen_more_helpful": "boolean|null",
+                "notes": "string|null"
+            },
+            "pairwise_signals": {
+                "toxicity_delta": "number|null",
+                "constructiveness_delta": "number|null",
+                "helpfulness_delta": "number|null"
+            }
+        }
+    },
+    "required_fields_by_folder": {
+        "harmless-base": [
+            "input.chosen",
+            "input.rejected",
+            "pairwise_preference.available"
+        ],
+        "helpful-base": [
+            "input.chosen",
+            "input.rejected",
+            "pairwise_preference.available"
+        ],
+        "helpful-online": [
+            "input.chosen",
+            "input.rejected"
+        ],
+        "helpful-rejection-sampled": [
+            "input.chosen",
+            "input.rejected"
+        ],
+        "red-team-attempts": [
+            "input.prompt",
+            "source.metadata.rating",
+            "source.metadata.task_description"
+        ]
+    },
+    "validation_contract": {
+        "json_valid": true,
+        "must_follow_ontologies": {
+            "need": "must be subset of needs_ontology.needs[].label",
+            "feelings": "must be subset of feelings_ontology.canonical_feelings_flat_list",
+            "pseudo_feelings_detected": "may contain pseudo feelings tokens but must not appear in feelings"
+        },
+        "observation_constraints": [
+            "No judgment markers unless inside quotes",
+            "No intent attribution unless explicitly quoted by user",
+            "No absolutes (always/never) unless quantified"
+        ],
+        "request_constraints": [
+            "At least one implicit_request unless safety.refusal",
+            "Implicit request must have action verb",
+            "Prefer positive phrasing"
+        ]
+    },
+    "examples": [
+        {
+            "id": "example_0001",
+            "created_at_utc": "2026-01-21T00:00:00Z",
+            "dataset": {
+                "dataset_name": "NVC-HH",
+                "dataset_version": "1.1",
+                "release_tier": "RAW",
+                "teacher_model": "gemini_3_pro",
+                "annotation_run_id": "run_001",
+                "prompt_version": "p_v3",
+                "ontology_versions": {
+                    "needs_ontology": "1.0.0",
+                    "feelings_ontology": "1.0.0",
+                    "pseudo_feelings_lexicon": "1.0.0",
+                    "somatic_markers_ontology": "1.0.0",
+                    "judgment_markers_ontology": "1.0.0",
+                    "plato_strategy_filter": "1.0.0",
+                    "request_quality_ontology": "1.0.0"
+                }
+            },
+            "source": {
+                "corpus": "hh-rlhf",
+                "folder": "helpful-base",
+                "split": "train",
+                "file": "train.jsonl",
+                "line_id": "12345",
+                "pair_type": "chosen_rejected",
+                "metadata": {
+                    "rating": null,
+                    "task_description": null,
+                    "model_type": null,
+                    "num_params": null,
+                    "additional": null
+                }
+            },
+            "input": {
+                "format": "pair",
+                "prompt": "Human: I feel manipulated by my boss and I want a new laptop so I can work from home.\nAssistant: ...",
+                "context": null,
+                "chosen": "Human: ...\nAssistant: (helpful response)",
+                "rejected": "Human: ...\nAssistant: (less helpful response)",
+                "assistant_response": null,
+                "conversation_turns": [],
+                "target_turn_index": null,
+                "notes": null
+            },
+            "ofnr": {
+                "observation": [
+                    "Your boss asked you to complete work tasks and suggested consequences if you refused."
+                ],
+                "feelings": [
+                    "angry",
+                    "confused",
+                    "hurt"
+                ],
+                "need": [
+                    "autonomy",
+                    "trust",
+                    "respect"
+                ],
+                "explicit_needs": [
+                    "new laptop",
+                    "work from home"
+                ],
+                "implicit_needs": [
+                    "reduced pressure",
+                    "clear expectations"
+                ],
+                "explicit_request": [
+                    "new laptop",
+                    "permission to work from home"
+                ],
+                "implicit_request": [
+                    "Would you be willing to clarify expectations and ask directly without pressure?"
+                ],
+                "implicit_intent": "Seek autonomy and a safer work setup without feeling controlled.",
+                "evaluations_detected": [
+                    "manipulated"
+                ],
+                "pseudo_feelings_detected": [
+                    "manipulated"
+                ],
+                "strategy_leakage_detected": [
+                    "new laptop"
+                ],
+                "translation_notes": "Translated pseudo-feeling 'manipulated' into true feelings and autonomy/trust needs."
+            },
+            "metadata": {
+                "somatic_markers": [],
+                "emotion_arousal_hint": "medium",
+                "emotion_valence_hint": "negative",
+                "language": "en"
+            },
+            "safety": {
+                "label": "allowed",
+                "policy_category": null,
+                "reason": "No disallowed request.",
+                "rewrite_mode": "normal",
+                "safe_alternative": [],
+                "safety_confidence": 0.92
+            },
+            "quality": {
+                "ofnr_compliance": 0.91,
+                "observation_is_nonjudgmental": 0.93,
+                "pseudo_feeling_translation_quality": 0.88,
+                "needs_list_match": 1.0,
+                "strategy_leakage_score": 0.96,
+                "request_is_actionable": 0.83,
+                "request_is_noncoercive": 0.95,
+                "overall_confidence": 0.89
+            },
+            "flags": {
+                "error_flags": [],
+                "warnings": []
+            },
+            "teacher_agreement": {
+                "multi_teacher_enabled": false,
+                "teachers": [],
+                "consensus": {
+                    "enabled": false,
+                    "method": "majority_vote",
+                    "consensus_score": 0.0,
+                    "consensus_pass": false,
+                    "resolved_need": [],
+                    "resolved_feelings": [],
+                    "resolved_observation": [],
+                    "resolved_implicit_request": []
+                }
+            },
+            "pairwise_preference": {
+                "available": true,
+                "preference_alignment": {
+                    "chosen_more_constructive": null,
+                    "chosen_more_safe": null,
+                    "chosen_more_helpful": null,
+                    "notes": null
+                },
+                "pairwise_signals": {
+                    "toxicity_delta": null,
+                    "constructiveness_delta": null,
+                    "helpfulness_delta": null
+                }
+            }
+        }
+    ]
+}

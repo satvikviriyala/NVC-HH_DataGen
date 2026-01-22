@@ -1,0 +1,325 @@
+{
+    "name": "request_quality_ontology",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction; constructive request generation)",
+    "license": "research-use",
+    "sources": [
+        "NVC pedagogy: Requests vs demands, present-positive-doable",
+        "User research report: request criteria and anti-hallucination constraints",
+        "Best practices in conversational assistants (actionability, next-step prompting)"
+    ],
+    "description": "Ontology and rule-system for evaluating and generating high-quality NVC-aligned requests. Used to score and transform R (Request) in OFNR. Focuses on actionability, specificity, doability, positive phrasing, and non-demand framing.",
+    "rules": {
+        "requests_must_be_actionable": true,
+        "requests_should_be_present_positive": true,
+        "requests_should_avoid_demands": true,
+        "requests_can_be_info_seeking": true,
+        "requests_can_be_boundary_setting": true,
+        "implicit_request_should_be_constructive": true,
+        "max_requests_per_example": 4
+    },
+    "core_definitions": {
+        "request": "A specific, doable action that could meet an underlying need. Requests invite choice and collaboration.",
+        "demand": "A request with implied threat, blame, guilt, or punishment if not met.",
+        "present_positive_doable": {
+            "present": "Something that can occur now or in the near future",
+            "positive": "States what is wanted, not what to stop",
+            "doable": "Concrete action with feasible effort"
+        }
+    },
+    "request_taxonomy": [
+        {
+            "type_id": "info_request",
+            "label": "Information-Seeking Request",
+            "description": "Ask for clarification, facts, or perspective.",
+            "examples": [
+                "Would you be willing to share what happened step-by-step?",
+                "Could you clarify what you mean by 'unfair'?",
+                "What outcome would feel acceptable to you?"
+            ]
+        },
+        {
+            "type_id": "action_request",
+            "label": "Direct Action Request",
+            "description": "Asks for a concrete action or behavior.",
+            "examples": [
+                "Would you be willing to lower your voice when we talk?",
+                "Would you be willing to provide 2 examples in the lecture notes?"
+            ]
+        },
+        {
+            "type_id": "boundary_request",
+            "label": "Boundary / Self-care Request",
+            "description": "Asks for space, limits, or changes to protect wellbeing.",
+            "examples": [
+                "Would you be willing to message me before coming over?",
+                "Would you be willing to pause and continue this conversation later?"
+            ]
+        },
+        {
+            "type_id": "repair_request",
+            "label": "Repair / Accountability Request",
+            "description": "Asks for repair after harm (apology, correction).",
+            "examples": [
+                "Would you be willing to acknowledge how that impacted me?",
+                "Would you be willing to correct the grade calculation?"
+            ]
+        },
+        {
+            "type_id": "collaborative_plan",
+            "label": "Collaborative Planning Request",
+            "description": "A joint plan with steps and mutual responsibility.",
+            "examples": [
+                "Would you be willing to create a weekly plan together?",
+                "Can we agree on a process for handling disputes?"
+            ]
+        },
+        {
+            "type_id": "self_request",
+            "label": "Self-directed Request",
+            "description": "A request directed to self (self-regulation).",
+            "examples": [
+                "Would you be willing to take a 5-minute break and breathe?",
+                "Would you be willing to write down the top 3 concerns?"
+            ]
+        }
+    ],
+    "anti_patterns": {
+        "demand_markers": {
+            "description": "Lexical cues that indicate coercion or implied punishment.",
+            "markers": [
+                "must",
+                "should",
+                "have to",
+                "otherwise",
+                "or else",
+                "if you don't",
+                "you better",
+                "i swear",
+                "you'll regret",
+                "i will make sure"
+            ],
+            "examples": [
+                "You must apologize or else.",
+                "If you don't do it, I will report you."
+            ]
+        },
+        "vagueness_markers": {
+            "description": "Requests too vague to act on.",
+            "markers": [
+                "be better",
+                "act normal",
+                "stop it",
+                "fix this",
+                "do the right thing",
+                "be nice",
+                "be respectful",
+                "change yourself",
+                "understand me"
+            ],
+            "rewrite_rule": "Convert into specific observable action/behavior."
+        },
+        "negative_only_markers": {
+            "description": "Requests framed only as what to stop; missing positive alternative.",
+            "markers": [
+                "stop",
+                "don't",
+                "never",
+                "quit",
+                "avoid"
+            ],
+            "rewrite_rule": "Rewrite with a positive substitute action."
+        },
+        "unbounded_scope": {
+            "description": "Impossible or unrealistic totalizing requests.",
+            "markers": [
+                "always",
+                "never",
+                "every time",
+                "forever",
+                "completely"
+            ],
+            "rewrite_rule": "Quantify or scope: 'in the next X situations', 'for the next week'."
+        }
+    },
+    "quality_scoring": {
+        "dimensions": [
+            "actionability",
+            "specificity",
+            "doability",
+            "positive_phrasing",
+            "non_coercion",
+            "need_alignment",
+            "time_scope"
+        ],
+        "scales": {
+            "0.0": "poor/unusable",
+            "0.5": "moderate/improvable",
+            "1.0": "excellent/highly actionable"
+        },
+        "scoring_rules": {
+            "actionability": {
+                "score_1_0": "Contains an action verb + clear actor + clear object/context",
+                "score_0_5": "Some action implied but missing specificity",
+                "score_0_0": "No actionable behavior; pure evaluation or complaint"
+            },
+            "specificity": {
+                "score_1_0": "Includes at least 2 of: {actor, action, context, frequency, example}",
+                "score_0_5": "Only 1 element present",
+                "score_0_0": "Abstract and general"
+            },
+            "doability": {
+                "score_1_0": "Small, feasible, bounded request",
+                "score_0_5": "Feasible but ambiguous effort",
+                "score_0_0": "Impossible / vague / unbounded"
+            },
+            "positive_phrasing": {
+                "score_1_0": "States what to do",
+                "score_0_5": "Mixed stop+do framing",
+                "score_0_0": "Only stop/avoid framing"
+            },
+            "non_coercion": {
+                "score_1_0": "Choice-based; no threat",
+                "score_0_5": "Mild pressure language",
+                "score_0_0": "Threat/demand implied"
+            },
+            "need_alignment": {
+                "score_1_0": "Clearly connected to canonical need(s)",
+                "score_0_5": "Indirect alignment",
+                "score_0_0": "No need link"
+            },
+            "time_scope": {
+                "score_1_0": "Near-term time window (now, today, next week)",
+                "score_0_5": "Time implied",
+                "score_0_0": "No scope / absolute forever framing"
+            }
+        },
+        "overall_score_formula": {
+            "formula": "mean(actionability, specificity, doability, positive_phrasing, non_coercion, need_alignment, time_scope)",
+            "note": "Store as quality.request_is_actionable and quality.ofnr_compliance contribution"
+        }
+    },
+    "rewrite_operators": [
+        {
+            "operator_id": "stop_to_positive",
+            "description": "Rewrite stop/don't requests into desired action requests.",
+            "input_pattern": "stop + VERB/ADJ",
+            "output_template": "Would you be willing to {positive_action} instead?",
+            "examples": [
+                {
+                    "input": "Stop being rude.",
+                    "rewrite": "Would you be willing to speak to me without insults and in a calm tone?"
+                }
+            ]
+        },
+        {
+            "operator_id": "vague_to_specific",
+            "description": "Convert vague requests into specific behavioral requests with examples.",
+            "examples": [
+                {
+                    "input": "Be respectful.",
+                    "rewrite": "Would you be willing to avoid interrupting me and let me finish my point before responding?"
+                }
+            ]
+        },
+        {
+            "operator_id": "demand_to_request",
+            "description": "Remove coercion; introduce choice and collaboration.",
+            "examples": [
+                {
+                    "input": "You must reply immediately.",
+                    "rewrite": "Would you be willing to reply within the next few hours, or tell me when you can respond?"
+                }
+            ]
+        },
+        {
+            "operator_id": "scope_unbounded_request",
+            "description": "Convert always/never into bounded scope.",
+            "examples": [
+                {
+                    "input": "Never ignore me again.",
+                    "rewrite": "Would you be willing to acknowledge my messages within 24 hours, even if you can't respond fully?"
+                }
+            ]
+        },
+        {
+            "operator_id": "add_need_link",
+            "description": "Add explicit need link to request.",
+            "template": "Would you be willing to {action} so that I can have {need}?",
+            "examples": [
+                {
+                    "input": "Give clearer examples.",
+                    "rewrite": "Would you be willing to add two worked examples per topic so students can have more clarity?"
+                }
+            ]
+        }
+    ],
+    "constructive_feedback_assistant_templates": {
+        "description": "Templates specifically for IIITB course feedback rewriting: preserve sentiment, remove toxicity, add specificity.",
+        "modes": [
+            {
+                "mode_id": "preserve_sentiment_make_constructive",
+                "rules": [
+                    "Do NOT reduce negative sentiment intensity",
+                    "Remove insults/ad hominem",
+                    "Convert into actionable feedback + request",
+                    "Add observation evidence"
+                ],
+                "templates": [
+                    "When {observation}, I feel {feeling} because I need {need}. Would you be willing to {request}?",
+                    "I found {observation}. This left me feeling {feeling}. Could you consider {request}?"
+                ]
+            },
+            {
+                "mode_id": "toxicity_soften_without_sanitizing",
+                "rules": [
+                    "Preserve dissatisfaction",
+                    "Replace slurs/insults with impact statements",
+                    "Keep the core complaint"
+                ],
+                "example": {
+                    "input": "This prof is trash and explains nothing.",
+                    "rewrite": "In multiple lectures, the explanations felt unclear and lacked worked examples, which left me frustrated and needing clarity. Would you be willing to provide more step-by-step examples or reference materials?"
+                }
+            }
+        ]
+    },
+    "examples": [
+        {
+            "need_context": [
+                "clarity",
+                "competence"
+            ],
+            "bad_request": "Teach better.",
+            "rewritten_request": "Would you be willing to include 2 worked examples per lecture and share a short summary note afterward?"
+        },
+        {
+            "need_context": [
+                "respect",
+                "peace"
+            ],
+            "bad_request": "Stop being rude.",
+            "rewritten_request": "Would you be willing to speak without insults and allow me to finish my sentences?"
+        },
+        {
+            "need_context": [
+                "fairness",
+                "clarity"
+            ],
+            "bad_request": "You are unfair.",
+            "rewritten_request": "Would you be willing to explain the grading rubric and share how points were deducted on my submission?"
+        }
+    ],
+    "implementation_notes": {
+        "for_dataset_generation": [
+            "Implicit_request must score >= 0.75 overall unless safety requires refusal.",
+            "If explicit request is toxic/violent, replace implicit request with safe_redirect.",
+            "Always include at least one implicit_request with a clear verb and object.",
+            "Prefer NVC format 'Would you be willing to...?'"
+        ],
+        "for_model_training": [
+            "Train refiner to transform vague/demand requests into high-quality ones using rewrite_operators.",
+            "Train generator to condition on canonical need + feelings + observation + explicit/implicit needs."
+        ]
+    }
+}

@@ -1,0 +1,530 @@
+{
+    "name": "plato_strategy_filter",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction; strategy-vs-need hallucination mitigation)",
+    "license": "research-use",
+    "sources": [
+        "NVC pedagogy: needs are universal; strategies are negotiable",
+        "User research report: PLATO Test (Person, Location, Action, Time, Object)",
+        "Max-Neef needs ontology operationalization"
+    ],
+    "description": "PLATO filter prevents models from hallucinating strategies as needs. Any candidate need containing a Person/Location/Action/Time/Object is a strategy or request, not a universal need. Strategies must be moved to explicit_needs/implicit_needs or requests, and mapped upward into canonical universal needs (needs_ontology.json).",
+    "plato_definition": {
+        "P": {
+            "name": "Person",
+            "definition": "A specific person/group/role as the required entity (e.g., you, my boss, professor, she).",
+            "examples": [
+                "I need you",
+                "I need my mom",
+                "I need the professor"
+            ]
+        },
+        "L": {
+            "name": "Location",
+            "definition": "A particular place/organization/setting (Paris, office, IIITB, hostel room).",
+            "examples": [
+                "I need to go to Paris",
+                "I need to be at home",
+                "I need in-person"
+            ]
+        },
+        "A": {
+            "name": "Action",
+            "definition": "A specific action/behavior as the need (stop yelling, give refund, buy laptop).",
+            "examples": [
+                "I need you to stop",
+                "I need to buy",
+                "I need to talk now"
+            ]
+        },
+        "T": {
+            "name": "Time",
+            "definition": "A specific time deadline/urgency constraint (now, today, by Friday).",
+            "examples": [
+                "I need it now",
+                "I need this today",
+                "I need it before tomorrow"
+            ]
+        },
+        "O": {
+            "name": "Object",
+            "definition": "A specific thing/service/commodity as the need (money, laptop, monitor, food item).",
+            "examples": [
+                "I need money",
+                "I need a laptop",
+                "I need a sandwich"
+            ]
+        }
+    },
+    "core_rule": {
+        "rule": "If a candidate need contains any PLATO element, it is NOT a universal need.",
+        "action": "Move it to explicit_needs or explicit_request, and infer canonical universal need(s) from needs_ontology.json."
+    },
+    "detection": {
+        "high_precision_patterns": [
+            "i need *",
+            "i want *",
+            "i require *",
+            "i have to *",
+            "i must *",
+            "i need you *",
+            "i need him *",
+            "i need her *",
+            "i need them *"
+        ],
+        "regex_rules": [
+            {
+                "id": "need_you_to",
+                "pattern": "\\b(i need|i want|i require)\\s+(you|him|her|them)\\s+to\\b",
+                "plato": [
+                    "Person",
+                    "Action"
+                ],
+                "classification": "request_or_demand"
+            },
+            {
+                "id": "need_object",
+                "pattern": "\\b(i need|i want|i require)\\s+(a|an|the)?\\s*([a-zA-Z]+)\\b",
+                "plato": [
+                    "Object"
+                ],
+                "classification": "strategy_object"
+            },
+            {
+                "id": "need_now_today",
+                "pattern": "\\b(i need|i want|i require).*(now|today|tomorrow|tonight|immediately|asap|by\\s+\\w+)\\b",
+                "plato": [
+                    "Time"
+                ],
+                "classification": "urgency_constraint"
+            }
+        ],
+        "ner_guidance": {
+            "person_entities": [
+                "PERSON",
+                "ORG",
+                "NORP",
+                "GPE",
+                "ROLE"
+            ],
+            "location_entities": [
+                "GPE",
+                "LOC",
+                "FAC",
+                "ORG"
+            ],
+            "object_entities": [
+                "PRODUCT",
+                "MONEY",
+                "WORK_OF_ART",
+                "DEVICE",
+                "FOOD",
+                "SERVICE"
+            ],
+            "notes": "Use any NER tagger if available. If not, use heuristics for pronouns/nouns."
+        }
+    },
+    "classification_labels": [
+        "universal_need",
+        "strategy_object",
+        "strategy_location",
+        "strategy_time",
+        "strategy_action",
+        "strategy_person",
+        "request_or_demand",
+        "mixed"
+    ],
+    "canonical_need_upleveling": {
+        "description": "Algorithm that maps strategies (PLATO-violating expressions) to canonical universal needs.",
+        "steps": [
+            "1) Detect PLATO violation type(s).",
+            "2) Keep the original phrase as explicit_need or explicit_request.",
+            "3) Infer the underlying universal need(s) from mapping table.",
+            "4) If uncertain: choose 1–2 broad canonical needs (clarity/safety/support/autonomy).",
+            "5) Provide implicit_request in constructive NVC form."
+        ],
+        "confidence_rules": [
+            "If mapping is direct (money -> safety), confidence >= 0.85",
+            "If mapping is contextual (promotion -> competence/appreciation/stability), confidence 0.65–0.8",
+            "If mapping ambiguous, confidence <= 0.6 and add clarifying request"
+        ]
+    },
+    "mapping_tables": {
+        "object_to_need": {
+            "money": [
+                "safety",
+                "stability",
+                "autonomy"
+            ],
+            "salary": [
+                "stability",
+                "safety"
+            ],
+            "job": [
+                "stability",
+                "meaning",
+                "competence"
+            ],
+            "promotion": [
+                "appreciation",
+                "competence",
+                "stability"
+            ],
+            "laptop": [
+                "competence",
+                "effectiveness",
+                "clarity"
+            ],
+            "monitor": [
+                "clarity",
+                "comfort",
+                "effectiveness"
+            ],
+            "keyboard": [
+                "comfort",
+                "effectiveness"
+            ],
+            "chair": [
+                "comfort",
+                "health"
+            ],
+            "food": [
+                "food"
+            ],
+            "water": [
+                "water"
+            ],
+            "coffee": [
+                "comfort",
+                "ease"
+            ],
+            "gym_membership": [
+                "health",
+                "movement"
+            ],
+            "therapy": [
+                "support",
+                "clarity",
+                "peace"
+            ],
+            "medicine": [
+                "health",
+                "comfort"
+            ],
+            "wifi": [
+                "connection",
+                "effectiveness",
+                "clarity"
+            ],
+            "phone": [
+                "connection",
+                "autonomy",
+                "effectiveness"
+            ],
+            "internet": [
+                "connection",
+                "effectiveness",
+                "clarity"
+            ],
+            "time": [
+                "ease",
+                "rest",
+                "autonomy",
+                "structure"
+            ],
+            "vacation": [
+                "rest",
+                "peace",
+                "ease"
+            ],
+            "sleep": [
+                "rest"
+            ],
+            "space": [
+                "privacy",
+                "autonomy",
+                "boundaries"
+            ],
+            "privacy": [
+                "privacy",
+                "boundaries",
+                "safety"
+            ],
+            "respect": [
+                "respect"
+            ],
+            "love": [
+                "love",
+                "connection"
+            ]
+        },
+        "action_to_need": {
+            "stop_yelling": [
+                "respect",
+                "peace",
+                "safety"
+            ],
+            "listen_to_me": [
+                "to_be_seen_and_heard",
+                "empathy",
+                "respect"
+            ],
+            "reply_to_me": [
+                "connection",
+                "clarity",
+                "trust"
+            ],
+            "apologize": [
+                "repair",
+                "respect",
+                "trust"
+            ],
+            "change_grade": [
+                "fairness",
+                "respect",
+                "clarity"
+            ],
+            "give_refund": [
+                "fairness",
+                "accountability",
+                "trust"
+            ],
+            "give_extension": [
+                "support",
+                "fairness",
+                "ease"
+            ],
+            "help_me": [
+                "support",
+                "competence",
+                "clarity"
+            ],
+            "leave_me_alone": [
+                "privacy",
+                "boundaries",
+                "autonomy"
+            ],
+            "give_me_space": [
+                "autonomy",
+                "privacy",
+                "boundaries"
+            ],
+            "tell_me_truth": [
+                "honesty",
+                "clarity",
+                "trust"
+            ]
+        },
+        "time_to_need": {
+            "now": [
+                "safety",
+                "support",
+                "clarity"
+            ],
+            "today": [
+                "structure",
+                "support",
+                "predictability"
+            ],
+            "asap": [
+                "support",
+                "clarity"
+            ],
+            "by_friday": [
+                "predictability",
+                "structure"
+            ],
+            "urgent": [
+                "safety",
+                "support",
+                "clarity"
+            ]
+        },
+        "person_to_need": {
+            "you": [
+                "connection",
+                "support",
+                "trust"
+            ],
+            "professor": [
+                "clarity",
+                "fairness",
+                "respect"
+            ],
+            "boss": [
+                "respect",
+                "fairness",
+                "stability"
+            ],
+            "parent": [
+                "support",
+                "connection",
+                "trust"
+            ],
+            "friend": [
+                "connection",
+                "trust",
+                "mutuality"
+            ],
+            "partner": [
+                "love",
+                "connection",
+                "trust"
+            ]
+        },
+        "location_to_need": {
+            "home": [
+                "safety",
+                "rest",
+                "peace"
+            ],
+            "office": [
+                "structure",
+                "competence",
+                "respect"
+            ],
+            "college": [
+                "learning",
+                "competence",
+                "belonging"
+            ],
+            "hostel": [
+                "privacy",
+                "rest",
+                "connection"
+            ],
+            "hospital": [
+                "health",
+                "support",
+                "safety"
+            ]
+        }
+    },
+    "need_vs_request_disambiguation": {
+        "examples": [
+            {
+                "input": "I need you to stop yelling.",
+                "plato": [
+                    "Person",
+                    "Action"
+                ],
+                "classification": "request_or_demand",
+                "explicit_request": [
+                    "Would you be willing to lower your voice when we talk?"
+                ],
+                "canonical_need": [
+                    "respect",
+                    "peace",
+                    "safety"
+                ]
+            },
+            {
+                "input": "I need money.",
+                "plato": [
+                    "Object"
+                ],
+                "classification": "strategy_object",
+                "explicit_need": [
+                    "money"
+                ],
+                "canonical_need": [
+                    "safety",
+                    "stability",
+                    "autonomy"
+                ]
+            },
+            {
+                "input": "I need a new laptop for ML.",
+                "plato": [
+                    "Object"
+                ],
+                "classification": "strategy_object",
+                "explicit_need": [
+                    "new laptop"
+                ],
+                "implicit_need": [
+                    "ability to run workloads locally",
+                    "reduced cloud compute dependence"
+                ],
+                "canonical_need": [
+                    "competence",
+                    "effectiveness",
+                    "autonomy"
+                ]
+            },
+            {
+                "input": "I need to go to Paris.",
+                "plato": [
+                    "Location"
+                ],
+                "classification": "strategy_location",
+                "explicit_need": [
+                    "go to Paris"
+                ],
+                "canonical_need": [
+                    "play",
+                    "meaning",
+                    "beauty",
+                    "autonomy"
+                ]
+            },
+            {
+                "input": "I need to talk right now.",
+                "plato": [
+                    "Action",
+                    "Time"
+                ],
+                "classification": "request_or_demand",
+                "explicit_request": [
+                    "Would you be willing to talk with me for 10 minutes now?"
+                ],
+                "canonical_need": [
+                    "connection",
+                    "support",
+                    "clarity"
+                ]
+            }
+        ]
+    },
+    "scoring": {
+        "needs_list_match": {
+            "description": "How well canonical need matches needs_ontology.",
+            "score_1_0": "All canonical needs appear in needs_ontology.json and contain no PLATO violations.",
+            "score_0_0": "Canonical needs contain objects/actions/people/time or out-of-ontology tokens."
+        },
+        "strategy_leakage": {
+            "description": "Rate of strategies incorrectly placed in canonical need list.",
+            "penalty": "Decrease quality.overall_confidence by 0.1 per leaked token"
+        }
+    },
+    "error_flags": [
+        {
+            "flag": "CANONICAL_NEED_HAS_PLATO",
+            "meaning": "The canonical need contains strategy elements and must be rewritten."
+        },
+        {
+            "flag": "CANONICAL_NEED_OUT_OF_ONTOLOGY",
+            "meaning": "The need token is not in needs_ontology.json; map via normalization."
+        },
+        {
+            "flag": "EXPLICIT_NEED_EMPTY_BUT_STRATEGY_PRESENT",
+            "meaning": "A strategy exists but wasn't stored in explicit_needs/request."
+        }
+    ],
+    "implementation_notes": {
+        "recommended_pipeline": [
+            "1) Extract candidate needs from text.",
+            "2) Run PLATO detection.",
+            "3) If PLATO violation: store phrase in explicit_needs or explicit_request.",
+            "4) Uplevel to canonical needs using mapping_tables + context.",
+            "5) If ambiguous: ask clarifying implicit_request."
+        ],
+        "recommended_fields_in_dataset": [
+            "ofnr.need[]",
+            "ofnr.explicit_needs[]",
+            "ofnr.implicit_needs[]",
+            "quality.needs_list_match",
+            "quality.overall_confidence"
+        ]
+    }
+}

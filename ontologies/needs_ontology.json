@@ -1,0 +1,1000 @@
+{
+    "name": "needs_ontology",
+    "version": "1.0.0",
+    "license": "research-use",
+    "created_for": "NVC-HH dataset (OFNR extraction and hallucination mitigation)",
+    "sources": [
+        "Marshall Rosenberg CNVC needs lists",
+        "Manfred Max-Neef Fundamental Human Needs Matrix",
+        "Operational semantic inventory supplied by Gemini-research"
+    ],
+    "description": "Canonical universal human needs ontology used for the field `need` ONLY. This ontology is locked. The labeler must choose needs from this list. Explicit_needs and implicit_needs are free-form and may contain strategies/objects. Use this ontology to map strategies to universal drivers.",
+    "rules": {
+        "need_field_is_canonical_only": true,
+        "explicit_needs_free_form": true,
+        "implicit_needs_free_form": true,
+        "no_strategies_in_canonical_needs": true,
+        "no_plato_elements_in_canonical_needs": true,
+        "output_normalization": {
+            "lowercase": true,
+            "spaces_to_underscore": true
+        }
+    },
+    "max_neef_fundamental_needs": [
+        "subsistence",
+        "protection",
+        "affection",
+        "understanding",
+        "participation",
+        "leisure",
+        "creation",
+        "identity",
+        "freedom"
+    ],
+    "taxonomy": [
+        {
+            "category_id": "connection_interdependence",
+            "category_label": "Connection & Interdependence",
+            "max_neef_mapping": [
+                "affection",
+                "participation",
+                "identity"
+            ],
+            "description": "Needs related to bonding, belonging, relational safety, and shared reality with other humans.",
+            "needs": [
+                {
+                    "id": "connection",
+                    "label": "connection",
+                    "aliases": [
+                        "closeness",
+                        "bond",
+                        "communion",
+                        "togetherness",
+                        "companionship"
+                    ],
+                    "examples": [
+                        "to feel connected",
+                        "to share life with others",
+                        "to not feel alone"
+                    ],
+                    "anti_examples": [
+                        "need to date him",
+                        "need to get married",
+                        "need a girlfriend"
+                    ],
+                    "notes": "Connection is universal; dating/marriage are strategies."
+                },
+                {
+                    "id": "belonging",
+                    "label": "belonging",
+                    "aliases": [
+                        "inclusion",
+                        "membership",
+                        "acceptance",
+                        "community"
+                    ],
+                    "examples": [
+                        "to belong",
+                        "to be included",
+                        "to feel welcomed"
+                    ],
+                    "anti_examples": [
+                        "need to join this club",
+                        "need to be invited to that party"
+                    ]
+                },
+                {
+                    "id": "love",
+                    "label": "love",
+                    "aliases": [
+                        "affection",
+                        "caring",
+                        "warmth",
+                        "tenderness"
+                    ],
+                    "examples": [
+                        "to feel loved",
+                        "to give and receive affection"
+                    ],
+                    "anti_examples": [
+                        "need him to love me",
+                        "need her attention"
+                    ]
+                },
+                {
+                    "id": "intimacy",
+                    "label": "intimacy",
+                    "aliases": [
+                        "emotional_closeness",
+                        "vulnerability",
+                        "deep_bonding"
+                    ],
+                    "examples": [
+                        "to feel emotionally close",
+                        "to share deeply"
+                    ],
+                    "anti_examples": [
+                        "need sex tonight",
+                        "need a hug right now"
+                    ],
+                    "notes": "Sex/hug are strategies; intimacy is the need."
+                },
+                {
+                    "id": "mutuality",
+                    "label": "mutuality",
+                    "aliases": [
+                        "reciprocity",
+                        "give_and_take",
+                        "balance_in_relationship"
+                    ],
+                    "examples": [
+                        "mutual care",
+                        "shared effort"
+                    ],
+                    "anti_examples": [
+                        "need them to do their part (without naming need)"
+                    ]
+                },
+                {
+                    "id": "trust",
+                    "label": "trust",
+                    "aliases": [
+                        "reliability",
+                        "dependability",
+                        "faith",
+                        "confidence_in_other"
+                    ],
+                    "examples": [
+                        "to rely safely on someone",
+                        "to feel secure with others"
+                    ],
+                    "anti_examples": [
+                        "need you to promise",
+                        "need password access"
+                    ],
+                    "notes": "Promises/passwords are strategies."
+                },
+                {
+                    "id": "honesty_in_relationship",
+                    "label": "honesty_in_relationship",
+                    "aliases": [
+                        "truthfulness",
+                        "candor",
+                        "sincerity"
+                    ],
+                    "examples": [
+                        "to know what is true",
+                        "transparent communication"
+                    ],
+                    "anti_examples": [
+                        "need to see their phone",
+                        "need them to confess"
+                    ]
+                },
+                {
+                    "id": "empathy",
+                    "label": "empathy",
+                    "aliases": [
+                        "understanding_from_others",
+                        "emotional_attunement"
+                    ],
+                    "examples": [
+                        "to be understood",
+                        "to feel heard emotionally"
+                    ],
+                    "anti_examples": [
+                        "need you to agree with me"
+                    ]
+                },
+                {
+                    "id": "to_be_seen_and_heard",
+                    "label": "to_be_seen_and_heard",
+                    "aliases": [
+                        "recognition",
+                        "being_acknowledged",
+                        "being_noticed"
+                    ],
+                    "examples": [
+                        "acknowledgement",
+                        "to be taken seriously"
+                    ],
+                    "anti_examples": [
+                        "need you to reply instantly"
+                    ]
+                },
+                {
+                    "id": "respect",
+                    "label": "respect",
+                    "aliases": [
+                        "dignity",
+                        "consideration",
+                        "honor",
+                        "being_taken_seriously"
+                    ],
+                    "examples": [
+                        "respectful language",
+                        "not being mocked"
+                    ],
+                    "anti_examples": [
+                        "need them to stop being rude (strategy)"
+                    ],
+                    "notes": "Stopping behavior is request; respect is need."
+                },
+                {
+                    "id": "appreciation",
+                    "label": "appreciation",
+                    "aliases": [
+                        "gratitude",
+                        "valuing",
+                        "acknowledgement_of_contribution"
+                    ],
+                    "examples": [
+                        "to be appreciated",
+                        "recognition of effort"
+                    ],
+                    "anti_examples": [
+                        "need a compliment",
+                        "need likes/upvotes"
+                    ]
+                },
+                {
+                    "id": "support",
+                    "label": "support",
+                    "aliases": [
+                        "help",
+                        "assistance",
+                        "backup",
+                        "guidance"
+                    ],
+                    "examples": [
+                        "emotional support",
+                        "practical support"
+                    ],
+                    "anti_examples": [
+                        "need you to do it for me",
+                        "need money now"
+                    ]
+                },
+                {
+                    "id": "cooperation",
+                    "label": "cooperation",
+                    "aliases": [
+                        "collaboration",
+                        "teamwork",
+                        "shared_responsibility"
+                    ],
+                    "examples": [
+                        "working together",
+                        "shared coordination"
+                    ],
+                    "anti_examples": [
+                        "need you to obey"
+                    ]
+                },
+                {
+                    "id": "community",
+                    "label": "community",
+                    "aliases": [
+                        "shared_life",
+                        "social_belonging",
+                        "mutual_aid"
+                    ],
+                    "examples": [
+                        "to be part of a community",
+                        "social support network"
+                    ],
+                    "anti_examples": [
+                        "need 1000 followers"
+                    ]
+                },
+                {
+                    "id": "mattering",
+                    "label": "mattering",
+                    "aliases": [
+                        "significance_to_others",
+                        "importance",
+                        "value_to_group"
+                    ],
+                    "examples": [
+                        "to matter",
+                        "to feel important"
+                    ],
+                    "anti_examples": [
+                        "need to be famous"
+                    ]
+                }
+            ]
+        },
+        {
+            "category_id": "physical_wellbeing_subsistence",
+            "category_label": "Physical Well-being (Subsistence)",
+            "max_neef_mapping": [
+                "subsistence",
+                "protection"
+            ],
+            "description": "Biological needs that sustain physical life and health.",
+            "needs": [
+                {
+                    "id": "air",
+                    "label": "air",
+                    "aliases": [
+                        "breathing",
+                        "oxygen"
+                    ],
+                    "examples": [
+                        "clean air",
+                        "ability to breathe"
+                    ],
+                    "anti_examples": []
+                },
+                {
+                    "id": "food",
+                    "label": "food",
+                    "aliases": [
+                        "nutrition",
+                        "sustenance",
+                        "nourishment"
+                    ],
+                    "examples": [
+                        "adequate nourishment"
+                    ],
+                    "anti_examples": [
+                        "need pizza",
+                        "need burger"
+                    ]
+                },
+                {
+                    "id": "water",
+                    "label": "water",
+                    "aliases": [
+                        "hydration",
+                        "fluids"
+                    ],
+                    "examples": [
+                        "hydration",
+                        "water access"
+                    ],
+                    "anti_examples": [
+                        "need coke"
+                    ]
+                },
+                {
+                    "id": "shelter",
+                    "label": "shelter",
+                    "aliases": [
+                        "housing",
+                        "warmth",
+                        "physical_security_home"
+                    ],
+                    "examples": [
+                        "safe shelter",
+                        "home"
+                    ],
+                    "anti_examples": [
+                        "need a 3bhk apartment"
+                    ]
+                },
+                {
+                    "id": "rest",
+                    "label": "rest",
+                    "aliases": [
+                        "sleep",
+                        "recovery",
+                        "downtime"
+                    ],
+                    "examples": [
+                        "sleep",
+                        "pause",
+                        "recovery time"
+                    ],
+                    "anti_examples": [
+                        "need to sleep 8 hours",
+                        "need vacation in Goa"
+                    ]
+                },
+                {
+                    "id": "health",
+                    "label": "health",
+                    "aliases": [
+                        "wellness",
+                        "physical_wellbeing",
+                        "healing"
+                    ],
+                    "examples": [
+                        "medical care",
+                        "healing"
+                    ],
+                    "anti_examples": [
+                        "need ibuprofen"
+                    ]
+                },
+                {
+                    "id": "comfort",
+                    "label": "comfort",
+                    "aliases": [
+                        "ease_body",
+                        "physical_ease",
+                        "pain_relief"
+                    ],
+                    "examples": [
+                        "pain relief",
+                        "physical comfort"
+                    ],
+                    "anti_examples": [
+                        "need AC"
+                    ]
+                },
+                {
+                    "id": "touch",
+                    "label": "touch",
+                    "aliases": [
+                        "physical_affection",
+                        "contact"
+                    ],
+                    "examples": [
+                        "warm touch",
+                        "hugging"
+                    ],
+                    "anti_examples": [
+                        "need a massage now"
+                    ],
+                    "notes": "Massage is strategy; touch is need."
+                },
+                {
+                    "id": "sexual_expression",
+                    "label": "sexual_expression",
+                    "aliases": [
+                        "sexuality",
+                        "sensuality"
+                    ],
+                    "examples": [
+                        "healthy sexuality"
+                    ],
+                    "anti_examples": [
+                        "need sex with X"
+                    ]
+                },
+                {
+                    "id": "movement",
+                    "label": "movement",
+                    "aliases": [
+                        "exercise",
+                        "activity",
+                        "mobility"
+                    ],
+                    "examples": [
+                        "ability to move",
+                        "exercise"
+                    ],
+                    "anti_examples": [
+                        "need gym membership"
+                    ]
+                }
+            ]
+        },
+        {
+            "category_id": "safety_protection",
+            "category_label": "Safety & Protection",
+            "max_neef_mapping": [
+                "protection"
+            ],
+            "description": "Needs for physical/emotional safety, predictability, and protection from harm.",
+            "needs": [
+                {
+                    "id": "safety",
+                    "label": "safety",
+                    "aliases": [
+                        "security",
+                        "protection"
+                    ],
+                    "examples": [
+                        "physical safety",
+                        "emotional safety"
+                    ],
+                    "anti_examples": [
+                        "need a gun",
+                        "need CCTV"
+                    ],
+                    "notes": "Gun/CCTV are strategies."
+                },
+                {
+                    "id": "stability",
+                    "label": "stability",
+                    "aliases": [
+                        "consistency",
+                        "reliability",
+                        "continuity"
+                    ],
+                    "examples": [
+                        "stable environment",
+                        "stable income"
+                    ],
+                    "anti_examples": [
+                        "need this exact job"
+                    ]
+                },
+                {
+                    "id": "predictability",
+                    "label": "predictability",
+                    "aliases": [
+                        "certainty",
+                        "reassurance",
+                        "knowing_what_to_expect"
+                    ],
+                    "examples": [
+                        "clear schedule",
+                        "predictable rules"
+                    ],
+                    "anti_examples": [
+                        "need tomorrow's questions leaked"
+                    ]
+                },
+                {
+                    "id": "boundaries",
+                    "label": "boundaries",
+                    "aliases": [
+                        "space",
+                        "privacy",
+                        "limits"
+                    ],
+                    "examples": [
+                        "personal boundaries",
+                        "time boundaries"
+                    ],
+                    "anti_examples": [
+                        "need them to never text me"
+                    ]
+                },
+                {
+                    "id": "privacy",
+                    "label": "privacy",
+                    "aliases": [
+                        "personal_space",
+                        "solitude"
+                    ],
+                    "examples": [
+                        "privacy respected"
+                    ],
+                    "anti_examples": [
+                        "need separate room in hostel"
+                    ]
+                },
+                {
+                    "id": "protection_from_harm",
+                    "label": "protection_from_harm",
+                    "aliases": [
+                        "security_from_threat",
+                        "harm_prevention"
+                    ],
+                    "examples": [
+                        "protection from bullying",
+                        "harm prevention"
+                    ],
+                    "anti_examples": []
+                }
+            ]
+        },
+        {
+            "category_id": "autonomy_freedom_agency",
+            "category_label": "Autonomy, Freedom & Agency",
+            "max_neef_mapping": [
+                "freedom",
+                "identity"
+            ],
+            "description": "Needs related to choice, independence, self-determination and agency.",
+            "needs": [
+                {
+                    "id": "autonomy",
+                    "label": "autonomy",
+                    "aliases": [
+                        "choice",
+                        "freedom",
+                        "self_determination"
+                    ],
+                    "examples": [
+                        "freedom to choose",
+                        "ability to decide"
+                    ],
+                    "anti_examples": [
+                        "need permission from him"
+                    ]
+                },
+                {
+                    "id": "choice",
+                    "label": "choice",
+                    "aliases": [
+                        "options",
+                        "agency"
+                    ],
+                    "examples": [
+                        "options available"
+                    ],
+                    "anti_examples": []
+                },
+                {
+                    "id": "independence",
+                    "label": "independence",
+                    "aliases": [
+                        "self_reliance",
+                        "sovereignty"
+                    ],
+                    "examples": [
+                        "self-reliance"
+                    ],
+                    "anti_examples": []
+                },
+                {
+                    "id": "control_over_life",
+                    "label": "control_over_life",
+                    "aliases": [
+                        "agency",
+                        "self_governance"
+                    ],
+                    "examples": [
+                        "control over schedule",
+                        "control over decisions"
+                    ],
+                    "anti_examples": [
+                        "control over others"
+                    ]
+                },
+                {
+                    "id": "self_expression",
+                    "label": "self_expression",
+                    "aliases": [
+                        "authenticity",
+                        "voice",
+                        "creativity",
+                        "truth_of_self"
+                    ],
+                    "examples": [
+                        "expressing myself",
+                        "authentic voice"
+                    ],
+                    "anti_examples": [
+                        "need to post on Instagram"
+                    ]
+                },
+                {
+                    "id": "effectiveness",
+                    "label": "effectiveness",
+                    "aliases": [
+                        "power_with",
+                        "influence",
+                        "impact"
+                    ],
+                    "examples": [
+                        "ability to influence outcomes",
+                        "being effective"
+                    ],
+                    "anti_examples": [
+                        "need to dominate",
+                        "need power over them"
+                    ]
+                }
+            ]
+        },
+        {
+            "category_id": "meaning_understanding_growth",
+            "category_label": "Meaning, Understanding & Growth",
+            "max_neef_mapping": [
+                "understanding",
+                "creation",
+                "identity"
+            ],
+            "description": "Needs related to learning, coherence, purpose, and self-development.",
+            "needs": [
+                {
+                    "id": "clarity",
+                    "label": "clarity",
+                    "aliases": [
+                        "understanding",
+                        "comprehension",
+                        "transparency"
+                    ],
+                    "examples": [
+                        "clear explanation",
+                        "clarity of purpose"
+                    ],
+                    "anti_examples": [
+                        "need answers to this exam"
+                    ]
+                },
+                {
+                    "id": "learning",
+                    "label": "learning",
+                    "aliases": [
+                        "growth",
+                        "development",
+                        "evolution"
+                    ],
+                    "examples": [
+                        "learning opportunities"
+                    ],
+                    "anti_examples": [
+                        "need to learn ML this week"
+                    ]
+                },
+                {
+                    "id": "competence",
+                    "label": "competence",
+                    "aliases": [
+                        "mastery",
+                        "capability",
+                        "skill"
+                    ],
+                    "examples": [
+                        "skill growth",
+                        "competence development"
+                    ],
+                    "anti_examples": [
+                        "need to get A+"
+                    ]
+                },
+                {
+                    "id": "meaning",
+                    "label": "meaning",
+                    "aliases": [
+                        "purpose",
+                        "significance"
+                    ],
+                    "examples": [
+                        "meaningful work"
+                    ],
+                    "anti_examples": [
+                        "need to be rich"
+                    ]
+                },
+                {
+                    "id": "progress",
+                    "label": "progress",
+                    "aliases": [
+                        "achievement",
+                        "moving_forward"
+                    ],
+                    "examples": [
+                        "making progress"
+                    ],
+                    "anti_examples": [
+                        "need promotion"
+                    ]
+                },
+                {
+                    "id": "challenge",
+                    "label": "challenge",
+                    "aliases": [
+                        "stimulation",
+                        "engagement"
+                    ],
+                    "examples": [
+                        "healthy challenge"
+                    ],
+                    "anti_examples": []
+                }
+            ]
+        },
+        {
+            "category_id": "peace_harmony_play",
+            "category_label": "Peace, Harmony & Play",
+            "max_neef_mapping": [
+                "leisure",
+                "protection"
+            ],
+            "description": "Needs related to calm, emotional equilibrium, and restorative play.",
+            "needs": [
+                {
+                    "id": "peace",
+                    "label": "peace",
+                    "aliases": [
+                        "calm",
+                        "serenity",
+                        "peace_of_mind"
+                    ],
+                    "examples": [
+                        "peace of mind"
+                    ],
+                    "anti_examples": [
+                        "need alcohol"
+                    ]
+                },
+                {
+                    "id": "ease",
+                    "label": "ease",
+                    "aliases": [
+                        "relaxation",
+                        "less_pressure"
+                    ],
+                    "examples": [
+                        "ease and relaxation"
+                    ],
+                    "anti_examples": [
+                        "need Netflix"
+                    ]
+                },
+                {
+                    "id": "harmony",
+                    "label": "harmony",
+                    "aliases": [
+                        "balance",
+                        "alignment",
+                        "equilibrium"
+                    ],
+                    "examples": [
+                        "harmonious environment"
+                    ],
+                    "anti_examples": []
+                },
+                {
+                    "id": "play",
+                    "label": "play",
+                    "aliases": [
+                        "fun",
+                        "humor",
+                        "recreation"
+                    ],
+                    "examples": [
+                        "fun",
+                        "humor",
+                        "joy"
+                    ],
+                    "anti_examples": [
+                        "need video game"
+                    ]
+                },
+                {
+                    "id": "beauty",
+                    "label": "beauty",
+                    "aliases": [
+                        "aesthetics",
+                        "order",
+                        "inspiration"
+                    ],
+                    "examples": [
+                        "aesthetic satisfaction"
+                    ],
+                    "anti_examples": []
+                }
+            ]
+        },
+        {
+            "category_id": "values_integrity_fairness",
+            "category_label": "Integrity, Values & Fairness",
+            "max_neef_mapping": [
+                "identity",
+                "freedom",
+                "protection"
+            ],
+            "description": "Needs related to alignment with values, honesty, justice, and moral coherence.",
+            "needs": [
+                {
+                    "id": "integrity",
+                    "label": "integrity",
+                    "aliases": [
+                        "authenticity",
+                        "congruence",
+                        "alignment_with_values"
+                    ],
+                    "examples": [
+                        "acting in integrity"
+                    ],
+                    "anti_examples": [
+                        "need them to admit guilt"
+                    ]
+                },
+                {
+                    "id": "honesty",
+                    "label": "honesty",
+                    "aliases": [
+                        "truth",
+                        "transparency",
+                        "reality"
+                    ],
+                    "examples": [
+                        "honest communication"
+                    ],
+                    "anti_examples": [
+                        "need to lie"
+                    ]
+                },
+                {
+                    "id": "fairness",
+                    "label": "fairness",
+                    "aliases": [
+                        "justice",
+                        "equity",
+                        "equality"
+                    ],
+                    "examples": [
+                        "fair process"
+                    ],
+                    "anti_examples": []
+                },
+                {
+                    "id": "accountability",
+                    "label": "accountability",
+                    "aliases": [
+                        "responsibility",
+                        "ownership"
+                    ],
+                    "examples": [
+                        "accountability for actions"
+                    ],
+                    "anti_examples": [
+                        "punishment"
+                    ]
+                },
+                {
+                    "id": "contribution",
+                    "label": "contribution",
+                    "aliases": [
+                        "service",
+                        "giving",
+                        "helping"
+                    ],
+                    "examples": [
+                        "contributing to others"
+                    ],
+                    "anti_examples": [
+                        "need to be used"
+                    ]
+                }
+            ]
+        }
+    ],
+    "normalization_map": {
+        "self respect": "respect",
+        "dignity": "respect",
+        "loyalty": "trust",
+        "dependability": "trust",
+        "certainty": "predictability",
+        "being heard": "to_be_seen_and_heard",
+        "validation": "empathy",
+        "recognition": "appreciation"
+    },
+    "deprecated_tokens": [
+        "money",
+        "laptop",
+        "monitor",
+        "promotion",
+        "vacation",
+        "sex_with_person"
+    ],
+    "guidance_for_mappers": {
+        "explicit_needs_examples": [
+            "a new laptop",
+            "a monitor",
+            "a refund",
+            "a break from work",
+            "more time"
+        ],
+        "implicit_needs_examples": [
+            "less eye strain",
+            "better ergonomics",
+            "more screen space",
+            "more flexibility",
+            "less emotional pressure"
+        ],
+        "canonical_need_mapping_examples": [
+            {
+                "explicit_need": "new laptop",
+                "canonical_need": "competence"
+            },
+            {
+                "explicit_need": "monitor",
+                "canonical_need": "clarity"
+            },
+            {
+                "explicit_need": "refund",
+                "canonical_need": "fairness"
+            },
+            {
+                "implicit_need": "less eye strain",
+                "canonical_need": "comfort"
+            },
+            {
+                "implicit_need": "more screen space",
+                "canonical_need": "effectiveness"
+            }
+        ]
+    }
+}

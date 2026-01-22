@@ -1,0 +1,587 @@
+{
+    "name": "feelings_ontology",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction and hallucination mitigation)",
+    "license": "research-use",
+    "sources": [
+        "CNVC feelings lists (needs met / needs unmet)",
+        "NVC pedagogy best practices (avoid pseudo-feelings)"
+    ],
+    "description": "Canonical verified feelings inventory. The labeler MUST choose feelings from this ontology only. Pseudo-feelings/evaluations are not allowed as feelings. Feelings are internal affective states independent of blame or external causation.",
+    "rules": {
+        "feelings_field_must_use_canonical_tokens": true,
+        "max_feelings_per_example": 4,
+        "output_normalization": {
+            "lowercase": true,
+            "spaces_to_underscore": true
+        },
+        "allowed_output_types": [
+            "emotion",
+            "mood",
+            "affective_state",
+            "somatic_affect"
+        ],
+        "not_allowed": [
+            "pseudo_feelings",
+            "judgments",
+            "strategies",
+            "external_agent_claims"
+        ]
+    },
+    "core_definition": {
+        "feeling": "An internal emotional or physical-affective state (e.g., sad, anxious, relieved).",
+        "not_a_feeling": [
+            "thoughts about others",
+            "evaluations/judgments",
+            "accusations",
+            "moral labels",
+            "participial adjectives implying an action done to you (e.g., ignored, manipulated, betrayed)"
+        ]
+    },
+    "inventory_structure": {
+        "valence": [
+            "needs_met",
+            "needs_unmet"
+        ],
+        "dimensions": [
+            "arousal_low",
+            "arousal_medium",
+            "arousal_high"
+        ],
+        "clusters": [
+            "connection_affection",
+            "joy_vitality",
+            "peace_contentment",
+            "confidence_empowerment",
+            "inspiration_awe",
+            "fear_anxiety",
+            "anger_aversion",
+            "sadness_pain",
+            "confusion_disorientation",
+            "shame_embarrassment",
+            "fatigue_burnout",
+            "detachment_numbness"
+        ]
+    },
+    "needs_met": {
+        "connection_affection": {
+            "description": "Feelings typically arising when connection/belonging/love needs are met.",
+            "arousal_low": [
+                "warm",
+                "tender",
+                "affectionate",
+                "soft",
+                "open_hearted"
+            ],
+            "arousal_medium": [
+                "loving",
+                "friendly",
+                "fond",
+                "compassionate",
+                "caring",
+                "connected",
+                "secure"
+            ],
+            "arousal_high": [
+                "deeply_connected",
+                "enamored",
+                "adoring",
+                "passionate"
+            ]
+        },
+        "joy_vitality": {
+            "description": "Feelings of aliveness, excitement, engagement when play/stimulation/joy needs are met.",
+            "arousal_low": [
+                "light",
+                "playful",
+                "easy",
+                "refreshed"
+            ],
+            "arousal_medium": [
+                "happy",
+                "joyful",
+                "delighted",
+                "cheerful",
+                "enthusiastic",
+                "engaged",
+                "interested"
+            ],
+            "arousal_high": [
+                "thrilled",
+                "excited",
+                "exuberant",
+                "electrified",
+                "ecstatic"
+            ]
+        },
+        "peace_contentment": {
+            "description": "Feelings of calm and contentment when peace/rest/ease needs are met.",
+            "arousal_low": [
+                "calm",
+                "at_ease",
+                "relaxed",
+                "quiet",
+                "mellow",
+                "still"
+            ],
+            "arousal_medium": [
+                "peaceful",
+                "content",
+                "satisfied",
+                "fulfilled",
+                "relieved",
+                "settled",
+                "comfortable"
+            ],
+            "arousal_high": [
+                "blissful",
+                "euphoric",
+                "tranquil"
+            ]
+        },
+        "confidence_empowerment": {
+            "description": "Feelings related to capability and agency when competence/autonomy needs are met.",
+            "arousal_low": [
+                "steady",
+                "grounded",
+                "secure",
+                "capable"
+            ],
+            "arousal_medium": [
+                "confident",
+                "assured",
+                "proud",
+                "empowered",
+                "motivated"
+            ],
+            "arousal_high": [
+                "invincible",
+                "unstoppable",
+                "bold"
+            ]
+        },
+        "inspiration_awe": {
+            "description": "Feelings of wonder, gratitude, and inspiration when meaning/beauty needs are met.",
+            "arousal_low": [
+                "grateful",
+                "thankful",
+                "appreciative"
+            ],
+            "arousal_medium": [
+                "inspired",
+                "moved",
+                "touched",
+                "hopeful",
+                "amazed"
+            ],
+            "arousal_high": [
+                "awed",
+                "wonder_struck",
+                "astonished"
+            ]
+        }
+    },
+    "needs_unmet": {
+        "fear_anxiety": {
+            "description": "Fear and anxiety states linked to unmet safety/predictability/trust needs.",
+            "arousal_low": [
+                "uneasy",
+                "wary",
+                "guarded",
+                "apprehensive",
+                "hesitant"
+            ],
+            "arousal_medium": [
+                "anxious",
+                "worried",
+                "nervous",
+                "tense",
+                "stressed",
+                "afraid",
+                "scared"
+            ],
+            "arousal_high": [
+                "terrified",
+                "panicked",
+                "horrified",
+                "alarmed",
+                "overwhelmed"
+            ]
+        },
+        "anger_aversion": {
+            "description": "Anger/irritation linked to unmet respect/fairness/autonomy needs.",
+            "arousal_low": [
+                "bothered",
+                "impatient",
+                "annoyed",
+                "irked"
+            ],
+            "arousal_medium": [
+                "frustrated",
+                "irritated",
+                "angry",
+                "resentful",
+                "indignant",
+                "agitated"
+            ],
+            "arousal_high": [
+                "furious",
+                "enraged",
+                "livid",
+                "outraged"
+            ]
+        },
+        "sadness_pain": {
+            "description": "Sadness and emotional pain linked to unmet connection/loss/grief needs.",
+            "arousal_low": [
+                "down",
+                "blue",
+                "heavy",
+                "discouraged"
+            ],
+            "arousal_medium": [
+                "sad",
+                "lonely",
+                "hurt",
+                "disappointed",
+                "sorrowful",
+                "mournful"
+            ],
+            "arousal_high": [
+                "heartbroken",
+                "devastated",
+                "anguished",
+                "despairing"
+            ]
+        },
+        "confusion_disorientation": {
+            "description": "Confusion linked to unmet clarity/meaning/competence needs.",
+            "arousal_low": [
+                "uncertain",
+                "doubtful",
+                "hesitant",
+                "unsure"
+            ],
+            "arousal_medium": [
+                "confused",
+                "perplexed",
+                "puzzled",
+                "torn",
+                "conflicted"
+            ],
+            "arousal_high": [
+                "bewildered",
+                "lost",
+                "chaotic",
+                "panicky"
+            ]
+        },
+        "shame_embarrassment": {
+            "description": "Shame states linked to unmet respect/acceptance/competence needs.",
+            "arousal_low": [
+                "self_conscious",
+                "awkward",
+                "sheepish"
+            ],
+            "arousal_medium": [
+                "embarrassed",
+                "ashamed",
+                "guilty",
+                "regretful"
+            ],
+            "arousal_high": [
+                "humiliated",
+                "mortified",
+                "disgraced"
+            ]
+        },
+        "fatigue_burnout": {
+            "description": "Fatigue states linked to unmet rest/balance/self-care needs.",
+            "arousal_low": [
+                "sleepy",
+                "lethargic",
+                "sluggish"
+            ],
+            "arousal_medium": [
+                "tired",
+                "weary",
+                "drained",
+                "fatigued"
+            ],
+            "arousal_high": [
+                "exhausted",
+                "burnt_out",
+                "depleted"
+            ]
+        },
+        "detachment_numbness": {
+            "description": "Detachment or numbness linked to overwhelm, shutdown, or unmet safety.",
+            "arousal_low": [
+                "blank",
+                "bored",
+                "apathetic"
+            ],
+            "arousal_medium": [
+                "detached",
+                "distant",
+                "withdrawn",
+                "indifferent"
+            ],
+            "arousal_high": [
+                "numb",
+                "frozen"
+            ]
+        }
+    },
+    "canonical_feelings_flat_list": [
+        "warm",
+        "tender",
+        "affectionate",
+        "soft",
+        "open_hearted",
+        "loving",
+        "friendly",
+        "fond",
+        "compassionate",
+        "caring",
+        "connected",
+        "secure",
+        "deeply_connected",
+        "enamored",
+        "adoring",
+        "passionate",
+        "light",
+        "playful",
+        "easy",
+        "refreshed",
+        "happy",
+        "joyful",
+        "delighted",
+        "cheerful",
+        "enthusiastic",
+        "engaged",
+        "interested",
+        "thrilled",
+        "excited",
+        "exuberant",
+        "electrified",
+        "ecstatic",
+        "calm",
+        "at_ease",
+        "relaxed",
+        "quiet",
+        "mellow",
+        "still",
+        "peaceful",
+        "content",
+        "satisfied",
+        "fulfilled",
+        "relieved",
+        "settled",
+        "comfortable",
+        "blissful",
+        "euphoric",
+        "tranquil",
+        "steady",
+        "grounded",
+        "capable",
+        "confident",
+        "assured",
+        "proud",
+        "empowered",
+        "motivated",
+        "invincible",
+        "unstoppable",
+        "bold",
+        "grateful",
+        "thankful",
+        "appreciative",
+        "inspired",
+        "moved",
+        "touched",
+        "hopeful",
+        "amazed",
+        "awed",
+        "wonder_struck",
+        "astonished",
+        "uneasy",
+        "wary",
+        "guarded",
+        "apprehensive",
+        "hesitant",
+        "anxious",
+        "worried",
+        "nervous",
+        "tense",
+        "stressed",
+        "afraid",
+        "scared",
+        "terrified",
+        "panicked",
+        "horrified",
+        "alarmed",
+        "overwhelmed",
+        "bothered",
+        "impatient",
+        "annoyed",
+        "irked",
+        "frustrated",
+        "irritated",
+        "angry",
+        "resentful",
+        "indignant",
+        "agitated",
+        "furious",
+        "enraged",
+        "livid",
+        "outraged",
+        "down",
+        "blue",
+        "heavy",
+        "discouraged",
+        "sad",
+        "lonely",
+        "hurt",
+        "disappointed",
+        "sorrowful",
+        "mournful",
+        "heartbroken",
+        "devastated",
+        "anguished",
+        "despairing",
+        "uncertain",
+        "doubtful",
+        "unsure",
+        "confused",
+        "perplexed",
+        "puzzled",
+        "torn",
+        "conflicted",
+        "bewildered",
+        "lost",
+        "chaotic",
+        "self_conscious",
+        "awkward",
+        "sheepish",
+        "embarrassed",
+        "ashamed",
+        "guilty",
+        "regretful",
+        "humiliated",
+        "mortified",
+        "disgraced",
+        "sleepy",
+        "lethargic",
+        "sluggish",
+        "tired",
+        "weary",
+        "drained",
+        "fatigued",
+        "exhausted",
+        "burnt_out",
+        "depleted",
+        "blank",
+        "bored",
+        "apathetic",
+        "detached",
+        "distant",
+        "withdrawn",
+        "indifferent",
+        "numb",
+        "frozen"
+    ],
+    "normalization_map": {
+        "stressed_out": "stressed",
+        "super_stressed": "stressed",
+        "fed_up": "frustrated",
+        "mad": "angry",
+        "pissed": "angry",
+        "upset": "sad",
+        "depressed": "sad",
+        "melancholy": "sad",
+        "scared": "afraid",
+        "terrified": "terrified",
+        "jittery": "nervous",
+        "on_edge": "tense",
+        "burned_out": "burnt_out",
+        "wiped_out": "exhausted",
+        "energized": "excited",
+        "elated": "happy",
+        "contented": "content",
+        "relaxed": "relaxed",
+        "thankful": "thankful",
+        "shocked": "alarmed",
+        "spooked": "afraid",
+        "panicky": "panicked",
+        "mortified": "mortified",
+        "disgusted": "angry",
+        "hate": "angry"
+    },
+    "explicit_exclusion": {
+        "pseudo_feelings_reference_file": "ontologies/pseudo_feelings_lexicon.json",
+        "disallowed_tokens": [
+            "betrayed",
+            "manipulated",
+            "ignored",
+            "abused",
+            "attacked",
+            "used",
+            "disrespected",
+            "unappreciated",
+            "unwanted",
+            "rejected",
+            "cheated",
+            "bullied",
+            "wronged",
+            "criticized",
+            "judged"
+        ],
+        "note": "These are evaluations/pseudo-feelings and must be translated into true feelings (hurt/sad/afraid/angry/etc.)."
+    },
+    "not_feelings_patterns": [
+        "i feel that",
+        "i feel like",
+        "i feel as if",
+        "i feel you",
+        "i feel he",
+        "i feel she",
+        "i feel they",
+        "i feel it is"
+    ],
+    "translation_guidance_from_pseudo_feelings": {
+        "manipulated": {
+            "true_feelings_candidates": [
+                "angry",
+                "afraid",
+                "confused"
+            ],
+            "notes": "Translate accusation into internal affect; map to autonomy/trust needs."
+        },
+        "betrayed": {
+            "true_feelings_candidates": [
+                "hurt",
+                "sad",
+                "angry"
+            ],
+            "notes": "Often indicates grief + broken trust."
+        },
+        "ignored": {
+            "true_feelings_candidates": [
+                "lonely",
+                "hurt",
+                "sad",
+                "anxious"
+            ],
+            "notes": "Often indicates unmet belonging/connection."
+        },
+        "criticized": {
+            "true_feelings_candidates": [
+                "embarrassed",
+                "ashamed",
+                "hurt",
+                "angry"
+            ],
+            "notes": "Often indicates unmet respect/competence."
+        }
+    }
+}

@@ -1,0 +1,45 @@
+TASK: Annotate HH-RLHF red-team-attempts transcripts into OFNR schema.
+
+You are given one JSONL row from:
+hh-rlhf/red-team-attempts/*.jsonl
+
+Input format (typical):
+{
+  "transcript": "Human: ...\nAssistant: ...\nHuman: ...",
+  "rating": <number>,
+  "task_description": "...",
+  "min_harmlessness_score_transcript": ...,
+  ...
+}
+
+GOAL:
+Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+
+What to focus on:
+- Extract the LAST user intention / last user prompt.
+- Red-team content may be harmful: wrongdoing, hate, violence, self-harm.
+- Apply safety policy strictly.
+- Still extract OFN (observation, feelings, needs) if possible.
+- Request must become safe_redirect or refusal if disallowed.
+
+How to fill schema:
+- dataset.teacher_model = "gemini_3_pro"
+- source.folder = "red-team-attempts"
+- source.pair_type = "single"
+- input.format = "single"
+- input.prompt = transcript (or last user turn)
+- source.metadata.rating = provided rating
+- source.metadata.task_description = provided task_description
+
+Pairwise:
+- pairwise_preference.available = false
+
+Safety:
+- For disallowed requests:
+  safety.label="disallowed"
+  rewrite_mode="refusal" OR "safe_redirect"
+  ofnr.implicit_request must redirect safely toward underlying need
+  safe_alternative[] must be populated (>=1)
+
+Output:
+Return ONLY ONE valid JSON object. No markdown.

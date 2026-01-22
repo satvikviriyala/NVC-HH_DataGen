@@ -1,0 +1,649 @@
+{
+    "name": "somatic_markers_ontology",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction; affective grounding; hallucination mitigation)",
+    "license": "research-use",
+    "sources": [
+        "NVC pedagogy: grounding feelings in body sensations",
+        "User research report: Somatic Markers Inventory (Section 4)",
+        "Affective computing conventions: arousal/valence mapping"
+    ],
+    "description": "Somatic markers are body sensations frequently co-occurring with emotional states. This ontology helps prevent inference hallucination by grounding affective interpretation in explicit bodily cues. Somatic markers are NOT feelings by default; they are physical sensation tokens. They can be used to support feeling inference and OFNR clarification requests.",
+    "rules": {
+        "somatic_markers_are_not_feelings": true,
+        "somatic_markers_can_support_feelings_inference": true,
+        "do_not_infer_feelings_without_evidence": true,
+        "output_normalization": {
+            "lowercase": true,
+            "spaces_to_underscore": true,
+            "strip_punctuation": true
+        },
+        "recommended_output_field": "metadata.somatic_markers",
+        "max_somatic_markers_per_example": 6
+    },
+    "core_concepts": {
+        "somatic_marker": "A physical sensation or body-based signal described in language (e.g., 'tight chest', 'knotted stomach', 'shaky hands').",
+        "difference_from_feeling": "Feelings are emotional states; somatic markers are bodily correlates. Somatic markers can indicate arousal, stress, fear, or exhaustion but do not automatically imply a moral narrative.",
+        "hallucination_risk": "Models may fabricate emotions; grounding via somatic cues reduces overconfident misclassification."
+    },
+    "structure": {
+        "dimensions": [
+            "modality",
+            "intensity",
+            "valence_hint"
+        ],
+        "modalities": [
+            "tactile_texture",
+            "temperature",
+            "energy_flow",
+            "visceral_internal",
+            "cardio_respiratory",
+            "musculoskeletal",
+            "kinetic_motion",
+            "neurological",
+            "fatigue_energy",
+            "spatial_expansion_constriction"
+        ]
+    },
+    "output_schema_extension_recommendation": {
+        "metadata": {
+            "somatic_markers": [
+                {
+                    "marker": "string",
+                    "modality": "string",
+                    "intensity": "low|medium|high",
+                    "evidence_span": "string",
+                    "confidence": 0.0
+                }
+            ]
+        }
+    },
+    "pattern_triggers": {
+        "direct_body_patterns": [
+            "my chest feels",
+            "i feel it in my chest",
+            "my stomach feels",
+            "i have a knot in my stomach",
+            "my throat feels",
+            "my head feels",
+            "i feel shaky",
+            "my hands are shaking",
+            "my heart is racing",
+            "i can't breathe",
+            "i feel numb",
+            "i feel frozen",
+            "i feel heavy",
+            "i feel drained",
+            "i feel exhausted"
+        ],
+        "regex_suggestions": [
+            "(chest|throat|stomach|head|heart|hands|jaw|shoulders) (feels|felt|is) (tight|heavy|knotted|tense|shaky|numb|burning)",
+            "(heart) (is )?(racing|pounding|fluttering)",
+            "(breathing|breath) (is )?(shallow|tight|constricted)",
+            "(stomach) (is )?(churning|knotted|twisting)",
+            "(hands) (are )?(shaking|trembling|clammy)"
+        ],
+        "negation_patterns": [
+            "not tired",
+            "no pain",
+            "not anxious",
+            "i'm fine",
+            "doesn't hurt"
+        ],
+        "negation_rule": "If negation patterns are present, reduce inference confidence; do not output contradictory somatic markers."
+    },
+    "modalities": {
+        "tactile_texture": {
+            "description": "Sensations on skin or surface quality.",
+            "markers": {
+                "low": [
+                    "itchy",
+                    "tingly",
+                    "prickly",
+                    "clammy",
+                    "sticky"
+                ],
+                "medium": [
+                    "sharp",
+                    "stinging",
+                    "numb",
+                    "sore",
+                    "raw"
+                ],
+                "high": [
+                    "piercing",
+                    "burning",
+                    "throbbing",
+                    "electric_shock_like"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "anxious",
+                    "afraid",
+                    "overwhelmed",
+                    "angry"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "comfort",
+                    "peace"
+                ],
+                "notes": "Tactile discomfort often signals stress response or agitation."
+            }
+        },
+        "temperature": {
+            "description": "Thermal sensations often linked to arousal and stress.",
+            "markers": {
+                "low": [
+                    "cool",
+                    "cold",
+                    "warm"
+                ],
+                "medium": [
+                    "flushed",
+                    "sweaty",
+                    "chills",
+                    "feverish"
+                ],
+                "high": [
+                    "burning_hot",
+                    "icy_frozen",
+                    "scalding"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "afraid",
+                    "angry",
+                    "anxious",
+                    "overwhelmed"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "peace",
+                    "rest"
+                ],
+                "notes": "Sweating/flushing often indicates anxiety, stress or anger arousal."
+            }
+        },
+        "energy_flow": {
+            "description": "Energy sensations: energized vs drained.",
+            "markers": {
+                "low": [
+                    "steady",
+                    "lightly_energized"
+                ],
+                "medium": [
+                    "buzzing",
+                    "vibrating",
+                    "tingling",
+                    "radiating"
+                ],
+                "high": [
+                    "surging",
+                    "exploding_energy",
+                    "electrified",
+                    "blocked_energy"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "excited",
+                    "anxious",
+                    "overwhelmed"
+                ],
+                "likely_needs": [
+                    "rest",
+                    "structure",
+                    "peace",
+                    "play"
+                ],
+                "notes": "Blocked energy often signals freeze response."
+            }
+        },
+        "visceral_internal": {
+            "description": "Gut sensations, nausea, internal tension.",
+            "markers": {
+                "low": [
+                    "fluttery",
+                    "light_stomach_drop",
+                    "hollow"
+                ],
+                "medium": [
+                    "churning",
+                    "queasy",
+                    "nauseous",
+                    "knotted_stomach",
+                    "tight_stomach"
+                ],
+                "high": [
+                    "vomit_like",
+                    "imploding",
+                    "exploding",
+                    "severe_cramping"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "anxious",
+                    "afraid",
+                    "overwhelmed",
+                    "disgusted"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "predictability",
+                    "peace"
+                ],
+                "notes": "Stomach knots are a strong indicator of anxiety or threat response."
+            }
+        },
+        "cardio_respiratory": {
+            "description": "Breathing, heart rate, chest tightness.",
+            "markers": {
+                "low": [
+                    "slow_breath",
+                    "steady_heart"
+                ],
+                "medium": [
+                    "tight_chest",
+                    "shallow_breath",
+                    "racing_heart",
+                    "pounding_heart"
+                ],
+                "high": [
+                    "breathless",
+                    "can't_breathe",
+                    "panic_breathing",
+                    "heart_thumping"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "afraid",
+                    "anxious",
+                    "panicked",
+                    "overwhelmed"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "reassurance",
+                    "support",
+                    "peace"
+                ],
+                "notes": "Cardio-respiratory cues are high-value signals of fear/anxiety."
+            }
+        },
+        "musculoskeletal": {
+            "description": "Muscle tension and posture-related sensation.",
+            "markers": {
+                "low": [
+                    "light_tension",
+                    "stiff"
+                ],
+                "medium": [
+                    "tight_shoulders",
+                    "jaw_clenched",
+                    "neck_tight",
+                    "body_tense"
+                ],
+                "high": [
+                    "rigid",
+                    "locked_up",
+                    "cramping",
+                    "trembling_muscles"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "angry",
+                    "anxious",
+                    "stressed"
+                ],
+                "likely_needs": [
+                    "ease",
+                    "rest",
+                    "safety"
+                ],
+                "notes": "Jaw clenching often correlates with anger/pressure."
+            }
+        },
+        "kinetic_motion": {
+            "description": "Movement sensations: shaking, trembling, jittery.",
+            "markers": {
+                "low": [
+                    "restless",
+                    "fidgety"
+                ],
+                "medium": [
+                    "jittery",
+                    "twitchy",
+                    "shaky",
+                    "trembly"
+                ],
+                "high": [
+                    "quivering",
+                    "uncontrollable_shaking",
+                    "spasming"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "anxious",
+                    "afraid",
+                    "overwhelmed"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "support",
+                    "peace"
+                ],
+                "notes": "High kinetic motion is strong high-arousal anxiety."
+            }
+        },
+        "neurological": {
+            "description": "Dizziness, fog, numbness, dissociation cues.",
+            "markers": {
+                "low": [
+                    "foggy",
+                    "spaced_out",
+                    "lightheaded"
+                ],
+                "medium": [
+                    "dizzy",
+                    "floating",
+                    "derealized",
+                    "numb"
+                ],
+                "high": [
+                    "frozen",
+                    "shutdown",
+                    "blackout_like"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "confused",
+                    "overwhelmed",
+                    "afraid",
+                    "numb"
+                ],
+                "likely_needs": [
+                    "safety",
+                    "rest",
+                    "support",
+                    "peace"
+                ],
+                "notes": "Freeze/dissociation is critical for safety-sensitive dialogues."
+            }
+        },
+        "fatigue_energy": {
+            "description": "Tiredness, exhaustion, depletion vocabulary.",
+            "markers": {
+                "low": [
+                    "sleepy",
+                    "low_energy",
+                    "sluggish"
+                ],
+                "medium": [
+                    "tired",
+                    "weary",
+                    "drained"
+                ],
+                "high": [
+                    "exhausted",
+                    "burnt_out",
+                    "depleted",
+                    "wiped_out"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "tired",
+                    "overwhelmed",
+                    "discouraged"
+                ],
+                "likely_needs": [
+                    "rest",
+                    "ease",
+                    "support",
+                    "structure"
+                ],
+                "notes": "Fatigue is often misinterpreted as laziness (judgment)."
+            }
+        },
+        "spatial_expansion_constriction": {
+            "description": "Internal spatial sense: expansive vs constricted.",
+            "markers": {
+                "low": [
+                    "open",
+                    "spacious",
+                    "light",
+                    "expanded"
+                ],
+                "medium": [
+                    "tight",
+                    "constricted",
+                    "closed",
+                    "contained"
+                ],
+                "high": [
+                    "trapped",
+                    "paralyzed",
+                    "suffocated",
+                    "shrinking"
+                ]
+            },
+            "mapping_guidance": {
+                "likely_feelings": [
+                    "peaceful",
+                    "afraid",
+                    "anxious",
+                    "overwhelmed"
+                ],
+                "likely_needs": [
+                    "autonomy",
+                    "space",
+                    "safety",
+                    "peace"
+                ],
+                "notes": "Expansive markers can support calm/content feelings; constriction correlates with fear."
+            }
+        }
+    },
+    "canonical_markers_flat_list": [
+        "itchy",
+        "tingly",
+        "prickly",
+        "clammy",
+        "sticky",
+        "sharp",
+        "stinging",
+        "numb",
+        "sore",
+        "raw",
+        "piercing",
+        "burning",
+        "throbbing",
+        "electric_shock_like",
+        "cool",
+        "cold",
+        "warm",
+        "flushed",
+        "sweaty",
+        "chills",
+        "feverish",
+        "burning_hot",
+        "icy_frozen",
+        "scalding",
+        "steady",
+        "lightly_energized",
+        "buzzing",
+        "vibrating",
+        "radiating",
+        "surging",
+        "exploding_energy",
+        "electrified",
+        "blocked_energy",
+        "fluttery",
+        "light_stomach_drop",
+        "hollow",
+        "churning",
+        "queasy",
+        "nauseous",
+        "knotted_stomach",
+        "tight_stomach",
+        "vomit_like",
+        "imploding",
+        "exploding",
+        "severe_cramping",
+        "slow_breath",
+        "steady_heart",
+        "tight_chest",
+        "shallow_breath",
+        "racing_heart",
+        "pounding_heart",
+        "breathless",
+        "can't_breathe",
+        "panic_breathing",
+        "heart_thumping",
+        "light_tension",
+        "stiff",
+        "tight_shoulders",
+        "jaw_clenched",
+        "neck_tight",
+        "body_tense",
+        "rigid",
+        "locked_up",
+        "cramping",
+        "trembling_muscles",
+        "restless",
+        "fidgety",
+        "jittery",
+        "twitchy",
+        "shaky",
+        "trembly",
+        "quivering",
+        "uncontrollable_shaking",
+        "spasming",
+        "foggy",
+        "spaced_out",
+        "lightheaded",
+        "dizzy",
+        "floating",
+        "derealized",
+        "shutdown",
+        "blackout_like",
+        "sleepy",
+        "low_energy",
+        "sluggish",
+        "tired",
+        "weary",
+        "drained",
+        "exhausted",
+        "burnt_out",
+        "depleted",
+        "wiped_out",
+        "open",
+        "spacious",
+        "light",
+        "expanded",
+        "tight",
+        "constricted",
+        "closed",
+        "contained",
+        "trapped",
+        "paralyzed",
+        "suffocated",
+        "shrinking"
+    ],
+    "normalization_map": {
+        "heart racing": "racing_heart",
+        "heart pounding": "pounding_heart",
+        "chest tight": "tight_chest",
+        "tightness in chest": "tight_chest",
+        "knot in stomach": "knotted_stomach",
+        "stomach in knots": "knotted_stomach",
+        "cant breathe": "can't_breathe",
+        "cannot breathe": "can't_breathe",
+        "jaw clenched": "jaw_clenched",
+        "tense shoulders": "tight_shoulders",
+        "burned out": "burnt_out",
+        "wiped out": "wiped_out",
+        "frozen": "frozen",
+        "shut down": "shutdown"
+    },
+    "inference_constraints": {
+        "do_not_overinfer": [
+            "Do not infer trauma or diagnosis.",
+            "Do not assume external agent intent based on somatic cues.",
+            "Somatic markers support, not replace, explicit feelings."
+        ],
+        "confidence_adjustments": [
+            "If somatic cue is explicit and strong (e.g., can't breathe), increase fear/anxiety confidence.",
+            "If cue is metaphorical without bodily mention, treat as low confidence.",
+            "If negation present, reduce confidence and prefer explicit user language."
+        ]
+    },
+    "examples": [
+        {
+            "user_text": "My chest feels tight and I can't breathe.",
+            "extracted_somatic_markers": [
+                {
+                    "marker": "tight_chest",
+                    "modality": "cardio_respiratory",
+                    "intensity": "medium"
+                },
+                {
+                    "marker": "can't_breathe",
+                    "modality": "cardio_respiratory",
+                    "intensity": "high"
+                }
+            ],
+            "suggested_feelings": [
+                "afraid",
+                "panicked",
+                "anxious"
+            ],
+            "suggested_needs": [
+                "safety",
+                "support",
+                "peace"
+            ],
+            "recommended_implicit_request": [
+                "Would you be willing to pause and take a slow breath with me?",
+                "Would you like to share what triggered this fear so we can find support?"
+            ]
+        },
+        {
+            "user_text": "I feel drained and heavy, like I can't move.",
+            "extracted_somatic_markers": [
+                {
+                    "marker": "drained",
+                    "modality": "fatigue_energy",
+                    "intensity": "medium"
+                },
+                {
+                    "marker": "heavy",
+                    "modality": "fatigue_energy",
+                    "intensity": "low"
+                }
+            ],
+            "suggested_feelings": [
+                "tired",
+                "overwhelmed",
+                "discouraged"
+            ],
+            "suggested_needs": [
+                "rest",
+                "ease",
+                "support"
+            ],
+            "recommended_implicit_request": [
+                "Would you be willing to take a short break and name one thing that feels most draining?",
+                "Would you like help creating a small plan for rest and recovery?"
+            ]
+        }
+    ]
+}

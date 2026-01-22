@@ -1,0 +1,418 @@
+{
+    "name": "judgment_markers_ontology",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction; Observation/Evaluation separation)",
+    "license": "research-use",
+    "sources": [
+        "NVC pedagogy: Observation vs Evaluation",
+        "User research: evaluative constructs and hallucination triggers",
+        "Common NLP toxicity/evaluation lexicons (generalized)"
+    ],
+    "description": "Judgment markers are words/phrases that convert observations into evaluations, blame narratives, or mind-reading. This ontology enables detection and transformation of evaluation language into neutral camera-like observations, improving OFNR extraction and reducing hallucinated empathy.",
+    "rules": {
+        "observations_must_be_nonjudgmental": true,
+        "if_judgment_marker_detected_in_observation": "rewrite_as_camera_observation_or_quote",
+        "allow_direct_quotes": true,
+        "quotes_may_contain_judgment_words": true,
+        "output_normalization": {
+            "lowercase": true,
+            "spaces_to_underscore": true,
+            "strip_punctuation": false
+        }
+    },
+    "core_principles": {
+        "camera_test": "If a video camera could record it, it can be an observation. If not, it's an evaluation.",
+        "evaluation_examples": [
+            "he is rude",
+            "she is manipulative",
+            "they don't care",
+            "the professor is unfair",
+            "you always ignore me"
+        ],
+        "observation_rewrites": [
+            "He said: 'I don't have time for this.'",
+            "She did not reply to my last three messages.",
+            "The professor gave feedback without explaining the reason.",
+            "The assistant refused and did not provide alternatives."
+        ]
+    },
+    "high_level_marker_types": [
+        "judgment_adjectives",
+        "insults_contempt",
+        "moralizing_labels",
+        "intent_attribution_mind_reading",
+        "absolute_generalizations",
+        "should_must_demands",
+        "blame_shame_language",
+        "dehumanization_objectification",
+        "diagnosis_pathologizing",
+        "comparative_ranking",
+        "dismissal_invalidation"
+    ],
+    "clusters": [
+        {
+            "cluster_id": "judgment_adjectives",
+            "label": "Judgment Adjectives / Evaluations",
+            "description": "Adjectives that imply good/bad or intent rather than observable behavior.",
+            "tokens": [
+                "rude",
+                "mean",
+                "bad",
+                "terrible",
+                "awful",
+                "horrible",
+                "toxic",
+                "immature",
+                "childish",
+                "pathetic",
+                "lazy",
+                "selfish",
+                "narcissistic",
+                "manipulative",
+                "controlling",
+                "unfair",
+                "unreasonable",
+                "biased",
+                "corrupt",
+                "incompetent",
+                "useless",
+                "stupid",
+                "idiotic",
+                "careless",
+                "irresponsible",
+                "dishonest",
+                "lying",
+                "fake",
+                "insincere",
+                "cold",
+                "heartless",
+                "cruel"
+            ],
+            "rewrite_templates": [
+                "Convert adjective to observable behavior: {person} did/said {action_or_quote}.",
+                "If user implies intent, rewrite as: {person} said/did X, and I interpreted it as Y."
+            ],
+            "examples": [
+                {
+                    "input": "He is rude.",
+                    "rewrite": "He said 'Stop wasting my time' during the discussion."
+                },
+                {
+                    "input": "She is manipulative.",
+                    "rewrite": "She asked me to do X and said she would be upset if I didn't."
+                }
+            ]
+        },
+        {
+            "cluster_id": "insults_contempt",
+            "label": "Insults / Contempt / Name-calling",
+            "description": "Degrading labels; often conflated with feelings.",
+            "tokens": [
+                "idiot",
+                "moron",
+                "loser",
+                "trash",
+                "garbage",
+                "scum",
+                "stupid",
+                "dumb",
+                "worthless",
+                "pathetic",
+                "disgusting",
+                "gross",
+                "pig",
+                "jerk",
+                "asshole",
+                "bitch",
+                "bastard",
+                "snake"
+            ],
+            "rewrite_templates": [
+                "Replace insult with behavior description and impact: {person} did X; speaker felt Y.",
+                "If insult is direct quote, preserve as quote only."
+            ],
+            "safety_note": "If hateful/violent target groups exist, trigger disallowed safety handling."
+        },
+        {
+            "cluster_id": "moralizing_labels",
+            "label": "Moralizing / Value Judgments",
+            "description": "Language that assigns moral worth, virtue or sin.",
+            "tokens": [
+                "evil",
+                "good_for_nothing",
+                "sinful",
+                "immoral",
+                "corrupt",
+                "pure",
+                "wrong",
+                "right",
+                "disgraceful",
+                "shameful",
+                "degenerate"
+            ],
+            "rewrite_templates": [
+                "Convert to concrete harm/impact: 'X happened' rather than 'they are evil'."
+            ]
+        },
+        {
+            "cluster_id": "intent_attribution_mind_reading",
+            "label": "Intent Attribution / Mind-reading",
+            "description": "Claims about what others think/feel/intend without evidence.",
+            "markers": [
+                "they meant to",
+                "they wanted to",
+                "they were trying to",
+                "he intended",
+                "she intended",
+                "they don't care",
+                "they hate me",
+                "they're jealous",
+                "they're doing it on purpose",
+                "they are targeting me",
+                "they are lying to me"
+            ],
+            "rewrite_templates": [
+                "Rewrite as perception: 'I interpreted X as Y' or 'I’m guessing they might be...'.",
+                "Prefer observable evidence: message frequency, exact words, actions."
+            ],
+            "examples": [
+                {
+                    "input": "They don't care about me.",
+                    "rewrite": "They did not respond to my messages for three days."
+                }
+            ]
+        },
+        {
+            "cluster_id": "absolute_generalizations",
+            "label": "Absolute Language / Overgeneralization",
+            "description": "Always/never/everyone language exaggerates and creates narrative certainty.",
+            "tokens": [
+                "always",
+                "never",
+                "everyone",
+                "no_one",
+                "every_time",
+                "constantly",
+                "forever",
+                "completely",
+                "totally",
+                "entirely",
+                "nothing",
+                "all_the_time"
+            ],
+            "rewrite_templates": [
+                "Quantify: replace with specific counts/times (e.g., 'three times this week').",
+                "Use bounded phrasing: 'often', 'recently', 'in the last X occurrences'."
+            ],
+            "examples": [
+                {
+                    "input": "You never listen to me.",
+                    "rewrite": "In our last two conversations, you responded without acknowledging my points."
+                }
+            ]
+        },
+        {
+            "cluster_id": "should_must_demands",
+            "label": "Should/Must / Demand Language",
+            "description": "Demands imply punishment or moral obligation.",
+            "tokens": [
+                "should",
+                "must",
+                "have_to",
+                "need_to",
+                "ought_to",
+                "you better",
+                "otherwise",
+                "or_else"
+            ],
+            "rewrite_templates": [
+                "Convert demand to request: 'Would you be willing to...?'",
+                "Separate preference from demand: 'I would like... because I need...'."
+            ],
+            "examples": [
+                {
+                    "input": "You must respect me.",
+                    "rewrite": "Would you be willing to speak to me without insults during disagreements?"
+                }
+            ]
+        },
+        {
+            "cluster_id": "blame_shame_language",
+            "label": "Blame / Shame / Fault Framing",
+            "description": "Language assigning fault; blocks needs identification.",
+            "tokens": [
+                "your_fault",
+                "my_fault",
+                "to_blame",
+                "blame",
+                "guilt",
+                "shame",
+                "you_made_me",
+                "because_of_you",
+                "you_ruined",
+                "you_destroyed"
+            ],
+            "rewrite_templates": [
+                "Translate blame to observation + feeling + need: 'When X happened, I felt Y because I need Z.'"
+            ],
+            "examples": [
+                {
+                    "input": "You ruined my life.",
+                    "rewrite": "After you said/did X, I felt devastated and scared because I need stability and support."
+                }
+            ]
+        },
+        {
+            "cluster_id": "dehumanization_objectification",
+            "label": "Dehumanization / Objectification / Group Hate",
+            "description": "Removes personhood, increases risk of unsafe content.",
+            "tokens": [
+                "animals",
+                "vermin",
+                "cockroaches",
+                "parasites",
+                "subhuman",
+                "they_are_not_human",
+                "they_deserve_to_die"
+            ],
+            "rewrite_templates": [
+                "Trigger disallowed: refuse + redirect to safe needs and de-escalation."
+            ],
+            "safety_note": "If this cluster appears, set safety.label=disallowed and rewrite_mode=safe_redirect/refusal."
+        },
+        {
+            "cluster_id": "diagnosis_pathologizing",
+            "label": "Diagnosis / Pathologizing",
+            "description": "Clinical labels used as insults or certainty.",
+            "tokens": [
+                "psycho",
+                "crazy",
+                "insane",
+                "schizo",
+                "bipolar",
+                "autistic_as_insult",
+                "narcissist",
+                "sociopath"
+            ],
+            "rewrite_templates": [
+                "Replace label with observed behavior and impact. Avoid diagnosing."
+            ],
+            "examples": [
+                {
+                    "input": "He is a narcissist.",
+                    "rewrite": "He often talks about his achievements and dismisses my feelings when I share them."
+                }
+            ]
+        },
+        {
+            "cluster_id": "comparative_ranking",
+            "label": "Comparisons / Ranking / Status Framing",
+            "description": "Comparisons that imply inferiority/superiority.",
+            "tokens": [
+                "better_than",
+                "worse_than",
+                "inferior",
+                "superior",
+                "useless",
+                "not_as_good",
+                "a_failure"
+            ],
+            "rewrite_templates": [
+                "Translate to competence/growth needs and specific feedback."
+            ]
+        },
+        {
+            "cluster_id": "dismissal_invalidation",
+            "label": "Dismissal / Invalidation",
+            "description": "Dismisses subjective experience; blocks empathy.",
+            "tokens": [
+                "overreacting",
+                "too_sensitive",
+                "dramatic",
+                "attention_seeking",
+                "not_a_big_deal",
+                "get_over_it",
+                "irrelevant",
+                "nonsense"
+            ],
+            "rewrite_templates": [
+                "Translate into observation about words used and the speaker's impact."
+            ],
+            "examples": [
+                {
+                    "input": "You're overreacting.",
+                    "rewrite": "You said 'you are overreacting' when I shared my concern."
+                }
+            ]
+        }
+    ],
+    "regex_patterns": [
+        {
+            "id": "always_never",
+            "pattern": "\\b(always|never|constantly|every time|no one|everyone)\\b",
+            "type": "absolute_generalization",
+            "severity": "medium"
+        },
+        {
+            "id": "intent_reading",
+            "pattern": "\\b(on purpose|intended to|meant to|trying to|wants to hurt)\\b",
+            "type": "mind_reading",
+            "severity": "high"
+        },
+        {
+            "id": "should_must",
+            "pattern": "\\b(should|must|ought to|have to|you better|or else)\\b",
+            "type": "demand_language",
+            "severity": "medium"
+        },
+        {
+            "id": "insults",
+            "pattern": "\\b(idiot|moron|loser|worthless|trash|garbage|scum)\\b",
+            "type": "insult",
+            "severity": "high"
+        }
+    ],
+    "rewrite_operator_library": {
+        "operators": [
+            {
+                "name": "rewrite_evaluation_to_behavior",
+                "description": "Turn adjectives into observable action or quote.",
+                "template": "{actor} {said/did} '{quote}' OR {actor} {action} at {time/context}."
+            },
+            {
+                "name": "rewrite_mind_reading_to_interpretation",
+                "description": "Convert intent attribution into subjective interpretation.",
+                "template": "I interpreted {action/words} as {meaning}."
+            },
+            {
+                "name": "rewrite_absolute_to_quantified",
+                "description": "Convert always/never into frequency statement.",
+                "template": "In the last {N} times / over the last {time window}, {observation}."
+            },
+            {
+                "name": "rewrite_demand_to_request",
+                "description": "Convert should/must into a request linked to a need.",
+                "template": "Would you be willing to {specific action}?"
+            }
+        ]
+    },
+    "observation_quality_scoring_guidance": {
+        "score_1_0_criteria": [
+            "No judgment adjectives unless quoted",
+            "No intent attribution",
+            "No absolutes",
+            "Contains concrete observable action, quote, or measurable frequency"
+        ],
+        "score_0_0_criteria": [
+            "Observation contains judgment adjective as factual claim",
+            "Observation contains mind-reading claims",
+            "Observation contains absolutes without quantification"
+        ],
+        "examples": [
+            {
+                "bad_observation": "He is rude and manipulative.",
+                "good_observation": "He said 'you’re useless' and then asked me to do his work again."
+            }
+        ]
+    }
+}

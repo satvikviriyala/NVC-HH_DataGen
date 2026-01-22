@@ -1,0 +1,41 @@
+TASK: Annotate HH-RLHF helpful-base preference pairs into OFNR schema.
+
+You are given one JSONL row from:
+hh-rlhf/helpful-base/train.jsonl (or test.jsonl)
+
+Input format:
+{
+  "chosen": "Human: ...\nAssistant: ...",
+  "rejected": "Human: ...\nAssistant: ..."
+}
+
+GOAL:
+Create ONE JSON object conforming to ontologies/schema_ofnr.json.
+
+What to focus on:
+- Helpfulness quality: clarity, completeness, non-evasive support
+- Extract the user's underlying needs even if the user requests strategies
+- Implicit request must be actionable and constructive
+- Keep sentiment preserved (especially if user is upset)
+
+How to fill schema:
+- dataset.teacher_model = "gemini_3_pro"
+- source.folder = "helpful-base"
+- source.pair_type = "chosen_rejected"
+- input.format = "pair"
+- input.chosen/rejected = provided
+
+Pairwise:
+- pairwise_preference.available = true
+- Leave preference_alignment fields null unless obvious
+
+Safety:
+- Usually allowed, but still detect disallowed content
+
+Output:
+Return ONLY ONE valid JSON object. No markdown.
+
+Hard constraints:
+- OFNR schema must match exactly
+- Need list must match needs ontology (no strategies)
+- Requests must score high actionability unless refusal

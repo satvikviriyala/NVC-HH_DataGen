@@ -1,0 +1,845 @@
+{
+    "name": "pseudo_feelings_lexicon",
+    "version": "1.0.0",
+    "created_for": "NVC-HH dataset (OFNR extraction and hallucination mitigation)",
+    "license": "research-use",
+    "sources": [
+        "CNVC pseudo-feelings / evaluative words lists",
+        "Rosenberg NVC pedagogy: thoughts vs feelings",
+        "User supplied research report: anti-hallucination inventory"
+    ],
+    "description": "Pseudo-feelings are evaluation/accusation words commonly written in the syntactic form of feelings but semantically encode judgments about others, blame, intent attribution, or narratives. They MUST NOT be output in the `feelings[]` field. They should trigger translation into verified true feelings + canonical universal needs.",
+    "rules": {
+        "pseudo_feelings_cannot_appear_in_feelings_output": true,
+        "if_present_translate_to_true_feelings": true,
+        "max_true_feelings_to_output": 4,
+        "true_feelings_must_come_from": "ontologies/feelings_ontology.json",
+        "canonical_needs_must_come_from": "ontologies/needs_ontology.json",
+        "output_normalization": {
+            "lowercase": true,
+            "spaces_to_underscore": true,
+            "strip_punctuation": true
+        }
+    },
+    "conceptual_definition": {
+        "pseudo_feeling": "A word/phrase that mimics a feeling but encodes a thought, accusation, judgment, interpretation, or narrative about an external agent.",
+        "why_it_matters": "Treating pseudo-feelings as real feelings reinforces blame narratives and is a form of affective hallucination. NVC requires translating pseudo-feelings into true affective states and needs."
+    },
+    "syntactic_triggers": {
+        "high_precision_markers": [
+            "i feel that",
+            "i feel like",
+            "i feel as if",
+            "i feel you",
+            "i feel he",
+            "i feel she",
+            "i feel they",
+            "i feel it is"
+        ],
+        "pattern_rules": [
+            {
+                "pattern": "i feel (that|like|as if) .*",
+                "type": "judgment_clause_or_metaphor",
+                "action": "translate_to_true_feelings_and_needs"
+            },
+            {
+                "pattern": "i feel (you|he|she|they) .*",
+                "type": "external_agent_attribution",
+                "action": "translate_to_true_feelings_and_needs"
+            },
+            {
+                "pattern": "i feel (ignored|manipulated|betrayed|attacked|abused|used)",
+                "type": "classic_pseudo_feeling",
+                "action": "translate_to_true_feelings_and_needs"
+            }
+        ]
+    },
+    "normalization_map": {
+        "walked on": "walked_on",
+        "walked all over": "walked_on",
+        "taken for granted": "taken_for_granted",
+        "left out": "left_out",
+        "ripped off": "ripped_off",
+        "screwed": "ripped_off",
+        "boxed in": "boxed_in",
+        "boxed-in": "boxed_in",
+        "dumped on": "dumped_on",
+        "put down": "put_down",
+        "put-down": "put_down",
+        "let down": "let_down",
+        "shut out": "shut_out",
+        "shut-out": "shut_out",
+        "ganged up on": "ganged_up_on",
+        "guilt tripped": "guilt_tripped",
+        "gaslit": "gaslit"
+    },
+    "forbidden_as_feelings": {
+        "note": "This list is used to hard-ban these tokens in feelings[] outputs.",
+        "tokens": [
+            "abandoned",
+            "abused",
+            "attacked",
+            "betrayed",
+            "bullied",
+            "cheated",
+            "coerced",
+            "cornered",
+            "criticized",
+            "discounted",
+            "discredited",
+            "disrespected",
+            "dumped_on",
+            "excluded",
+            "gaslit",
+            "guilt_tripped",
+            "harassed",
+            "hassled",
+            "ignored",
+            "invisible",
+            "invalidated",
+            "judged",
+            "let_down",
+            "manipulated",
+            "marginalized",
+            "misunderstood",
+            "neglected",
+            "overpowered",
+            "patronized",
+            "pressured",
+            "provoked",
+            "punished",
+            "put_down",
+            "rejected",
+            "ripped_off",
+            "screwed",
+            "smothered",
+            "suffocated",
+            "taken_for_granted",
+            "threatened",
+            "tormented",
+            "tricked",
+            "unaccepted",
+            "unappreciated",
+            "unheard",
+            "unimportant",
+            "unloved",
+            "unseen",
+            "unwanted",
+            "unsupported",
+            "used",
+            "victimized",
+            "violated",
+            "wronged"
+        ]
+    },
+    "clusters": [
+        {
+            "cluster_id": "victimhood_harm_neglect",
+            "cluster_label": "Victimhood / Harm / Neglect",
+            "semantic_core": "The speaker interprets another agent as harming, neglecting, or exploiting them.",
+            "translation_principle": "Strip accusation → identify underlying true feelings (fear, hurt, anger) → map to needs (safety, support, respect, trust).",
+            "entries": [
+                {
+                    "token": "abandoned",
+                    "story": "You left me when I needed you.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "hurt",
+                        "lonely",
+                        "sad"
+                    ],
+                    "likely_needs": [
+                        "connection",
+                        "belonging",
+                        "support",
+                        "stability"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt/lonely} because I’m needing {connection/support}."
+                },
+                {
+                    "token": "abused",
+                    "story": "You are harming me intentionally.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "angry",
+                        "overwhelmed",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "safety",
+                        "protection_from_harm",
+                        "respect",
+                        "support"
+                    ],
+                    "ofnr_translation_template": "I feel {afraid/overwhelmed} because I’m needing {safety/protection}."
+                },
+                {
+                    "token": "attacked",
+                    "story": "You are hostile toward me.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "angry",
+                        "alarmed"
+                    ],
+                    "likely_needs": [
+                        "safety",
+                        "respect",
+                        "peace"
+                    ],
+                    "ofnr_translation_template": "I feel {alarmed/afraid} because I’m needing {safety/peace}."
+                },
+                {
+                    "token": "bullied",
+                    "story": "You are using power to hurt me.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "angry",
+                        "overwhelmed",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "safety",
+                        "autonomy",
+                        "respect",
+                        "fairness"
+                    ],
+                    "ofnr_translation_template": "I feel {afraid/hurt} because I’m needing {safety/respect}."
+                },
+                {
+                    "token": "dumped_on",
+                    "story": "You are burdening me with your issues unfairly.",
+                    "true_feelings_candidates": [
+                        "overwhelmed",
+                        "angry",
+                        "tired"
+                    ],
+                    "likely_needs": [
+                        "boundaries",
+                        "respect",
+                        "ease",
+                        "support"
+                    ],
+                    "ofnr_translation_template": "I feel {overwhelmed} because I’m needing {boundaries/ease}."
+                },
+                {
+                    "token": "harassed",
+                    "story": "You keep bothering me / violating my space.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "afraid",
+                        "tense"
+                    ],
+                    "likely_needs": [
+                        "boundaries",
+                        "privacy",
+                        "peace",
+                        "safety"
+                    ],
+                    "ofnr_translation_template": "I feel {tense} because I’m needing {space/peace}."
+                },
+                {
+                    "token": "hassled",
+                    "story": "You are obstructing my peace or progress.",
+                    "true_feelings_candidates": [
+                        "irritated",
+                        "frustrated",
+                        "stressed"
+                    ],
+                    "likely_needs": [
+                        "ease",
+                        "autonomy",
+                        "peace"
+                    ],
+                    "ofnr_translation_template": "I feel {frustrated} because I’m needing {ease/autonomy}."
+                },
+                {
+                    "token": "neglected",
+                    "story": "You are not caring for me / not showing up.",
+                    "true_feelings_candidates": [
+                        "lonely",
+                        "sad",
+                        "hurt",
+                        "anxious"
+                    ],
+                    "likely_needs": [
+                        "connection",
+                        "support",
+                        "appreciation",
+                        "belonging"
+                    ],
+                    "ofnr_translation_template": "I feel {lonely/hurt} because I’m needing {care/connection}."
+                },
+                {
+                    "token": "used",
+                    "story": "You treat me as a tool, not a person.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "sad",
+                        "angry"
+                    ],
+                    "likely_needs": [
+                        "respect",
+                        "mutuality",
+                        "connection",
+                        "appreciation"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt} because I’m needing {respect/mutuality}."
+                },
+                {
+                    "token": "victimized",
+                    "story": "I am the target of wrongdoing.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "overwhelmed",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "safety",
+                        "fairness",
+                        "autonomy",
+                        "support"
+                    ],
+                    "ofnr_translation_template": "I feel {afraid/overwhelmed} because I’m needing {safety/fairness}."
+                },
+                {
+                    "token": "violated",
+                    "story": "You crossed my boundary.",
+                    "true_feelings_candidates": [
+                        "alarmed",
+                        "angry",
+                        "afraid",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "boundaries",
+                        "respect",
+                        "safety",
+                        "privacy"
+                    ],
+                    "ofnr_translation_template": "I feel {alarmed/angry} because I’m needing {boundaries/respect}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "betrayal_trust_break",
+            "cluster_label": "Betrayal / Broken Trust",
+            "semantic_core": "Promises or expectations violated; trust damaged.",
+            "translation_principle": "Grief + hurt → trust/consistency/honesty needs.",
+            "entries": [
+                {
+                    "token": "betrayed",
+                    "story": "You broke a promise or loyalty.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "sad",
+                        "angry",
+                        "disappointed"
+                    ],
+                    "likely_needs": [
+                        "trust",
+                        "honesty",
+                        "stability",
+                        "connection"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt/disappointed} because I’m needing {trust/honesty}."
+                },
+                {
+                    "token": "let_down",
+                    "story": "You failed expectations / didn’t show up.",
+                    "true_feelings_candidates": [
+                        "sad",
+                        "disappointed",
+                        "discouraged",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "trust",
+                        "support",
+                        "stability"
+                    ],
+                    "ofnr_translation_template": "I feel {disappointed} because I’m needing {reliability/support}."
+                },
+                {
+                    "token": "cheated",
+                    "story": "You acted unfairly or dishonestly for gain.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "hurt",
+                        "resentful"
+                    ],
+                    "likely_needs": [
+                        "fairness",
+                        "honesty",
+                        "trust"
+                    ],
+                    "ofnr_translation_template": "I feel {angry/hurt} because I’m needing {fairness/honesty}."
+                },
+                {
+                    "token": "tricked",
+                    "story": "You deceived me.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "confused",
+                        "angry"
+                    ],
+                    "likely_needs": [
+                        "honesty",
+                        "trust",
+                        "clarity"
+                    ],
+                    "ofnr_translation_template": "I feel {confused/hurt} because I’m needing {honesty/clarity}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "control_coercion_restriction",
+            "cluster_label": "Control / Coercion / Restriction",
+            "semantic_core": "Loss of autonomy; forced actions; boundaries violated.",
+            "translation_principle": "Anger + fear → autonomy/boundaries choice.",
+            "entries": [
+                {
+                    "token": "coerced",
+                    "story": "You are forcing me to act against my will.",
+                    "true_feelings_candidates": [
+                        "afraid",
+                        "angry",
+                        "overwhelmed"
+                    ],
+                    "likely_needs": [
+                        "autonomy",
+                        "choice",
+                        "safety",
+                        "boundaries"
+                    ],
+                    "ofnr_translation_template": "I feel {afraid/angry} because I’m needing {autonomy/safety}."
+                },
+                {
+                    "token": "pressured",
+                    "story": "You are pushing me beyond my willingness.",
+                    "true_feelings_candidates": [
+                        "stressed",
+                        "anxious",
+                        "frustrated"
+                    ],
+                    "likely_needs": [
+                        "autonomy",
+                        "ease",
+                        "choice"
+                    ],
+                    "ofnr_translation_template": "I feel {stressed} because I’m needing {choice/ease}."
+                },
+                {
+                    "token": "boxed_in",
+                    "story": "You restrict my choices or movement.",
+                    "true_feelings_candidates": [
+                        "anxious",
+                        "frustrated",
+                        "afraid"
+                    ],
+                    "likely_needs": [
+                        "autonomy",
+                        "choice",
+                        "freedom",
+                        "space"
+                    ],
+                    "ofnr_translation_template": "I feel {frustrated} because I’m needing {freedom/space}."
+                },
+                {
+                    "token": "cornered",
+                    "story": "I have no way out.",
+                    "true_feelings_candidates": [
+                        "panicked",
+                        "afraid",
+                        "overwhelmed"
+                    ],
+                    "likely_needs": [
+                        "safety",
+                        "autonomy",
+                        "space"
+                    ],
+                    "ofnr_translation_template": "I feel {afraid} because I’m needing {space/safety}."
+                },
+                {
+                    "token": "smothered",
+                    "story": "You are too close / controlling.",
+                    "true_feelings_candidates": [
+                        "frustrated",
+                        "anxious",
+                        "afraid"
+                    ],
+                    "likely_needs": [
+                        "boundaries",
+                        "autonomy",
+                        "privacy",
+                        "space"
+                    ],
+                    "ofnr_translation_template": "I feel {anxious} because I’m needing {space/boundaries}."
+                },
+                {
+                    "token": "manipulated",
+                    "story": "You are controlling me deceptively.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "afraid",
+                        "confused"
+                    ],
+                    "likely_needs": [
+                        "autonomy",
+                        "trust",
+                        "honesty",
+                        "clarity"
+                    ],
+                    "ofnr_translation_template": "I feel {confused/angry} because I’m needing {honesty/autonomy}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "exclusion_invisibility",
+            "cluster_label": "Exclusion / Invisibility",
+            "semantic_core": "Not being included, heard, or valued socially.",
+            "translation_principle": "Loneliness + sadness → belonging/connection/appreciation.",
+            "entries": [
+                {
+                    "token": "excluded",
+                    "story": "You keep me out of the group.",
+                    "true_feelings_candidates": [
+                        "lonely",
+                        "sad",
+                        "hurt",
+                        "anxious"
+                    ],
+                    "likely_needs": [
+                        "belonging",
+                        "connection",
+                        "community",
+                        "mattering"
+                    ],
+                    "ofnr_translation_template": "I feel {lonely} because I’m needing {belonging/connection}."
+                },
+                {
+                    "token": "ignored",
+                    "story": "You pay no attention to me.",
+                    "true_feelings_candidates": [
+                        "lonely",
+                        "hurt",
+                        "sad",
+                        "anxious"
+                    ],
+                    "likely_needs": [
+                        "to_be_seen_and_heard",
+                        "connection",
+                        "appreciation"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt} because I’m needing {to_be_seen_and_heard}."
+                },
+                {
+                    "token": "invisible",
+                    "story": "No one sees me.",
+                    "true_feelings_candidates": [
+                        "sad",
+                        "lonely",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "mattering",
+                        "belonging",
+                        "connection"
+                    ],
+                    "ofnr_translation_template": "I feel {lonely} because I’m needing {mattering}."
+                },
+                {
+                    "token": "unheard",
+                    "story": "You are not listening to me.",
+                    "true_feelings_candidates": [
+                        "frustrated",
+                        "sad",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "to_be_seen_and_heard",
+                        "empathy",
+                        "clarity"
+                    ],
+                    "ofnr_translation_template": "I feel {frustrated} because I’m needing {to_be_seen_and_heard}."
+                },
+                {
+                    "token": "unwanted",
+                    "story": "You wish I wasn’t here.",
+                    "true_feelings_candidates": [
+                        "sad",
+                        "ashamed",
+                        "anxious"
+                    ],
+                    "likely_needs": [
+                        "belonging",
+                        "connection",
+                        "acceptance"
+                    ],
+                    "ofnr_translation_template": "I feel {sad/anxious} because I’m needing {belonging}."
+                },
+                {
+                    "token": "rejected",
+                    "story": "You push me away.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "sad",
+                        "lonely",
+                        "anxious"
+                    ],
+                    "likely_needs": [
+                        "belonging",
+                        "connection",
+                        "love"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt} because I’m needing {connection}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "status_worth_inadequacy",
+            "cluster_label": "Status / Worth / Inadequacy Judgments",
+            "semantic_core": "Meta-evaluation about being deficient or seen as deficient.",
+            "translation_principle": "Shame + fear → competence/respect/acceptance.",
+            "entries": [
+                {
+                    "token": "stupid",
+                    "story": "I lack intelligence / you think I’m stupid.",
+                    "true_feelings_candidates": [
+                        "ashamed",
+                        "embarrassed",
+                        "sad"
+                    ],
+                    "likely_needs": [
+                        "competence",
+                        "respect",
+                        "learning",
+                        "acceptance"
+                    ],
+                    "ofnr_translation_template": "I feel {embarrassed} because I’m needing {competence/respect}."
+                },
+                {
+                    "token": "worthless",
+                    "story": "I have no value.",
+                    "true_feelings_candidates": [
+                        "ashamed",
+                        "sad",
+                        "discouraged"
+                    ],
+                    "likely_needs": [
+                        "mattering",
+                        "meaning",
+                        "connection",
+                        "appreciation"
+                    ],
+                    "ofnr_translation_template": "I feel {sad} because I’m needing {mattering/meaning}."
+                },
+                {
+                    "token": "inadequate",
+                    "story": "I’m not enough.",
+                    "true_feelings_candidates": [
+                        "ashamed",
+                        "anxious",
+                        "discouraged"
+                    ],
+                    "likely_needs": [
+                        "competence",
+                        "growth",
+                        "support",
+                        "respect"
+                    ],
+                    "ofnr_translation_template": "I feel {discouraged} because I’m needing {support/growth}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "invalidation_disrespect",
+            "cluster_label": "Invalidation / Disrespect / Diminishing",
+            "semantic_core": "Perceived disrespect, minimization, denial of reality.",
+            "translation_principle": "Anger + hurt → respect/recognition/empathy.",
+            "entries": [
+                {
+                    "token": "invalidated",
+                    "story": "You deny my reality or feelings.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "angry",
+                        "confused"
+                    ],
+                    "likely_needs": [
+                        "respect",
+                        "empathy",
+                        "to_be_seen_and_heard"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt} because I’m needing {respect/empathy}."
+                },
+                {
+                    "token": "disrespected",
+                    "story": "You are not honoring my dignity.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "hurt",
+                        "resentful"
+                    ],
+                    "likely_needs": [
+                        "respect",
+                        "dignity",
+                        "consideration"
+                    ],
+                    "ofnr_translation_template": "I feel {angry} because I’m needing {respect}."
+                },
+                {
+                    "token": "patronized",
+                    "story": "You treat me like a child.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "hurt",
+                        "resentful"
+                    ],
+                    "likely_needs": [
+                        "respect",
+                        "equality",
+                        "autonomy"
+                    ],
+                    "ofnr_translation_template": "I feel {resentful} because I’m needing {respect/equality}."
+                },
+                {
+                    "token": "put_down",
+                    "story": "You insulted me / diminished me.",
+                    "true_feelings_candidates": [
+                        "hurt",
+                        "angry",
+                        "embarrassed"
+                    ],
+                    "likely_needs": [
+                        "respect",
+                        "appreciation",
+                        "to_be_seen_and_heard"
+                    ],
+                    "ofnr_translation_template": "I feel {hurt} because I’m needing {respect}."
+                }
+            ]
+        },
+        {
+            "cluster_id": "injustice_unfairness",
+            "cluster_label": "Injustice / Unfairness",
+            "semantic_core": "Perceived unfair treatment, inequity, exploitation.",
+            "translation_principle": "Anger → fairness/justice/accountability.",
+            "entries": [
+                {
+                    "token": "wronged",
+                    "story": "You treated me unjustly.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "hurt",
+                        "resentful"
+                    ],
+                    "likely_needs": [
+                        "fairness",
+                        "justice",
+                        "respect"
+                    ],
+                    "ofnr_translation_template": "I feel {angry} because I’m needing {fairness}."
+                },
+                {
+                    "token": "ripped_off",
+                    "story": "You took advantage of me unfairly.",
+                    "true_feelings_candidates": [
+                        "angry",
+                        "resentful",
+                        "hurt"
+                    ],
+                    "likely_needs": [
+                        "fairness",
+                        "respect",
+                        "accountability"
+                    ],
+                    "ofnr_translation_template": "I feel {resentful} because I’m needing {fairness/accountability}."
+                }
+            ]
+        }
+    ],
+    "additional_pseudo_feeling_tokens_flat": [
+        "abandoned",
+        "abused",
+        "attacked",
+        "betrayed",
+        "bullied",
+        "cheated",
+        "coerced",
+        "cornered",
+        "criticized",
+        "discounted",
+        "discredited",
+        "disrespected",
+        "excluded",
+        "gaslit",
+        "guilt_tripped",
+        "harassed",
+        "hassled",
+        "ignored",
+        "invisible",
+        "invalidated",
+        "judged",
+        "let_down",
+        "manipulated",
+        "marginalized",
+        "misunderstood",
+        "neglected",
+        "overpowered",
+        "patronized",
+        "pressured",
+        "provoked",
+        "punished",
+        "put_down",
+        "rejected",
+        "ripped_off",
+        "smothered",
+        "suffocated",
+        "taken_for_granted",
+        "threatened",
+        "tormented",
+        "tricked",
+        "unaccepted",
+        "unappreciated",
+        "unheard",
+        "unimportant",
+        "unloved",
+        "unseen",
+        "unwanted",
+        "unsupported",
+        "used",
+        "victimized",
+        "violated",
+        "wronged"
+    ],
+    "translation_pipeline_contract": {
+        "input": "User utterance containing pseudo-feelings.",
+        "output": {
+            "feelings": "Replace pseudo-feelings with verified feelings candidates",
+            "need": "Map to canonical needs from needs_ontology",
+            "explicit_needs": "Keep surface-level wants if present",
+            "implicit_needs": "Infer hidden wants/constraints if present"
+        },
+        "example": {
+            "user_text": "I feel manipulated and used.",
+            "pseudo_feelings_detected": [
+                "manipulated",
+                "used"
+            ],
+            "translated_feelings": [
+                "angry",
+                "confused",
+                "hurt"
+            ],
+            "canonical_needs": [
+                "autonomy",
+                "trust",
+                "respect"
+            ],
+            "implicit_request": [
+                "Would you be willing to clarify what you want from me and ask directly?",
+                "Would you be willing to check whether I’m comfortable before making requests?"
+            ]
+        }
+    }
+}
