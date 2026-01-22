@@ -6,13 +6,19 @@ Input File: hh-rlhf/helpful-online/train.jsonl
 Context:
 You are processing the input file `hh-rlhf/helpful-online/train.jsonl`.
 
+CRITICAL INSTRUCTION - ITERATION LOOP:
+You must NOT stop after processing one row. You must output a valid JSONL object for EVERY row in the input file.
+
 Output Handling & Resumability:
 1. Check if the file `Gemini3_pro_helpful_online_train.jsonl` exists.
 2. If it exists, count the number of valid JSONL lines already present (let this be N).
 3. SKIP the first N rows of the input file `hh-rlhf/helpful-online/train.jsonl`.
-4. Resume processing from row N+1 onwards.
-5. If the file does not exist, start from row 1 and create the file.
-6. For every new row processed, APPEND the JSONL object to `Gemini3_pro_helpful_online_train.jsonl`.
+4. Start processing from row N+1.
+5. PROCESS ALL REMAINING ROWS SEQUENTIALLY.
+   - Read Row N+1 -> Generate JSON -> Append to Output File.
+   - Read Row N+2 -> Generate JSON -> Append to Output File.
+   - ... Repeat until End of File.
+6. Do NOT stop until all lines in the input file are processed.
 
 Input format (one line):
 {
@@ -21,8 +27,7 @@ Input format (one line):
 }
 
 GOAL:
-Produce strictly valid JSONL (one JSON object per line).
-Do NOT wrap the output in a list or markdown block.
+Produce strictly valid JSONL.
 Each output line must conform to `ontologies/schema_ofnr.json`.
 Append this line to: `Gemini3_pro_helpful_online_train.jsonl`
 
@@ -40,4 +45,4 @@ How to fill schema:
 Output format example:
 {"id": "...", "ofnr": {...}}
 
-REMEMBER: Output must be JSONL. No extra text.
+REMEMBER: Output must be JSONL. Iterate through ALL rows.
