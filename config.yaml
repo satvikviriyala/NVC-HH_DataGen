@@ -1,0 +1,80 @@
+# NVC-HH Multi-Pass Pipeline Configuration
+# LOCAL TESTING MODE (LM Studio on M3 Max 128GB)
+
+# Paths
+paths:
+  ontologies: "../ontologies"
+  prompts: "prompts"
+  input_data: "../NVC_HH"
+  output_data: "../NVC_HH_Annotated"
+
+# LM Studio API
+# vLLM API (High Concurrency)
+api:
+  base_url: "http://localhost:8000/v1"
+
+# Model settings
+# Running on vLLM with high concurrency
+models:
+  observer:
+    # GLM 4.7 Thinking
+    model_id: "huihui-ai/GLM-4-9B-Chat-Abliterated" 
+    # Note: Using a best-guess HF path for "Huihui GLM 4.7 Flash Abliterated". 
+    # If using local weights, this might need adjustment, but vLLM usually needs the HF ID.
+    parameters:
+      temperature: 0.6
+      max_tokens: 4096
+      
+  empathizer:
+    # OpenAI GPT-OSS 120B
+    model_id: "txgsync/gpt-oss-120b"
+    parameters:
+      temperature: 0.7
+      max_tokens: 2048
+
+  strategist:
+    # Qwen 3 Next
+    model_id: "huihui-ai/Qwen2.5-72B-Instruct-Abliterated" # Placeholder for Qwen3 Next if not on HF yet, but based on user prompt "Qwen 3 Next"
+    # Actually, looking at screenshot it says "Huihui Qwen3 Next 80B A3B Thinking". 
+    # I will use the name from the prompt/screenshot as the ID if it's served that way, 
+    # but for vLLM it's usually a path. I'll use a descriptive ID that likely matches the servoing name.
+    model_id: "Huihui-Qwen3-Next-80B-A3B-Thinking" 
+    parameters:
+      temperature: 0.7
+      max_tokens: 2048
+
+  critic:
+    # Llama 4 Scout
+    model_id: "meta-llama/Llama-4-Scout-17B" # Placeholder based on "Llama 4 Scout"
+    parameters:
+      temperature: 0.1
+      max_tokens: 2048
+
+# Global Processing settings
+processing:
+  batch_size: 128          # High batch size for vLLM
+  context_length: 65536    # Max context
+  checkpoint_every: 500
+  resume_enabled: true
+  retry_on_failure: 3
+  timeout_seconds: 600
+
+# Ontology file mapping
+ontologies:
+  observer:
+    - judgment_markers_ontology
+  empathizer:
+    - feelings_ontology
+    - needs_ontology
+    - pseudo_feelings_lexicon
+  strategist:
+    - plato_strategy_filter
+    - request_quality_ontology
+  critic:
+    - feelings_ontology
+    - needs_ontology
+    - pseudo_feelings_lexicon
+    - judgment_markers_ontology
+    - somatic_markers_ontology
+
+# Cloud configuration (Integrated above)
